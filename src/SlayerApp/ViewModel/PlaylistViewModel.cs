@@ -2,50 +2,27 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Text;
 
-namespace src.SlayerApp.ViewModel;
-
-public class LibraryViewModel : INotifyPropertyChanged
+namespace SlayerApp.ViewModel
 {
-    private string _playlistName;
-    private int _songCount;
-    private int _playlistImage;
-    public string PlaylistName
+    public class PlaylistViewModel : INotifyPropertyChanged
     {
-        get => _playlistName;
-        set
+        PlaylistModel PlaylistModel { get; set; }
+
+
+        public PlaylistViewModel() { }
+
+        public void SetPlaylistModel(PlaylistModel model)
         {
-            if (_playlistName != value)
-            {
-                _playlistName = value;
-                OnPropertyChanged();
-            }
+            PlaylistModel = model;
         }
-    }
 
-    public int SongCount
-    {
-        get => _songCount;
-        set
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            if (_songCount != value)
-            {
-                _songCount = value;
-                OnPropertyChanged();
-            }
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-    }
-
-    public PlaylistViewModel()
-    {
-        _playlistName = "New Playlist";
-        SongCount = 10;
-    }
-
-    public event PropertyChangedEventHandler PropertyChanged;
-
-    protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }

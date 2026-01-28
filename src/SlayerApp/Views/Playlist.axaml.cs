@@ -10,6 +10,6 @@ public partial class Playlist : UserControl
     public Playlist()
     {
         InitializeComponent();
-        DataContext = new PlaylistViewModel();
+        DataContext = new LibraryViewModel();
     }
 }
