@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -6,23 +7,18 @@ using System.Text;
 
 namespace SlayerApp.ViewModel
 {
-    public class PlaylistViewModel : INotifyPropertyChanged
+    public partial class PlaylistViewModel : ObservableObject
     {
-        Playlist Playlist { get; set; }
+        [ObservableProperty]
+        private Playlist _playlist;
 
-
-        public PlaylistViewModel() { }
-
-        public void SetPlaylist(Playlist model)
+        public PlaylistViewModel(Playlist playlist) 
         {
-            Playlist = model;
+            Playlist = playlist;
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
 
-        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+
+        
     }
 }

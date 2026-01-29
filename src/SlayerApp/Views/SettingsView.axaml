@@ -8,8 +8,8 @@
              x:DataType="viewmodel:SettingsViewModel">
   <DockPanel>
     <StackPanel DockPanel.Dock="Top">
-      <TextBox Watermark="Search for Albums...." Text="{Binding PathToAdd, Delay=400}" />
-      <Button Content="Buy Album"
+      <TextBox Watermark="Add library folder" Text="{Binding PathToAdd, Delay=400}" />
+      <Button Content="Add"
               VerticalAlignment="Top"
               IsEnabled="True"
               Command="{Binding AddToPathListCommand}"

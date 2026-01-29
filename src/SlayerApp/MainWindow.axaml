@@ -9,17 +9,22 @@
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
-    <DockPanel>
-        <!-- navigation bar -->
-        <StackPanel DockPanel.Dock="Left" Width="200" Background="#1a0033">
-            <Button Padding="16" Width="200" Foreground="White" Name="Home" Click="NavigationButton_Click">Home</Button>
-            <Button Padding="16" Width="200" Foreground="White" Name="Library" Click="NavigationButton_Click">Library</Button>
-            <Button Padding="16" Width="200" Foreground="White" Name="Settings" Click="NavigationButton_Click">Settings</Button>
-        </StackPanel>
+    <Grid RowDefinitions="*,Auto">
+        <DockPanel Grid.Row="0">
+            <!-- navigation bar -->
+            <StackPanel DockPanel.Dock="Left" Width="200" Background="#1a0033">
+                <Button Padding="16" Width="200" Foreground="White" Name="Home" Click="NavigationButton_Click">Home</Button>
+                <Button Padding="16" Width="200" Foreground="White" Name="Library" Click="NavigationButton_Click">Library</Button>
+                <Button Padding="16" Width="200" Foreground="White" Name="Settings" Click="NavigationButton_Click">Settings</Button>
+            </StackPanel>
+            
+            <Panel>
+                <views:LibraryView IsVisible="True" Name="LibraryView"/>
+                <views:SettingsView IsVisible="False" Name="SettingsView"/>
+            </Panel>
+        </DockPanel>
         
-        <Panel>
-            <views:LibraryView IsVisible="True" Name="LibraryView"/>
-            <views:SettingsView IsVisible="False" Name="SettingsView"/>
-        </Panel>
-    </DockPanel>
+        <!-- Media Bar at bottom -->
+        <views:MediaBar Grid.Row="1" Name="MediaBarControl"/>
+    </Grid>
 </Window>

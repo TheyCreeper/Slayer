@@ -7,8 +7,7 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
-        Playlist playlist = new Playlist();
-        playlist.AddFromPath("/home/theycreeper/Documents/Minecraft - Volume Alpha");
+        MediaBarControl.DataContext = App.MediaBar;
     }
 
     private void HideUserControls()

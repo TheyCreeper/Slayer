@@ -37,4 +37,17 @@ public partial class LibraryViewModel : ObservableObject
     {
         SelectedAlbum = null;
     }
+
+    [RelayCommand]
+    private void PlayAlbum(AlbumViewModel album)
+    {
+        _ = album.PlayAlbumCommand;
+    }
+
+    [RelayCommand]
+    private void AddAlbumToQueue(AlbumViewModel album)
+    {
+        _ = album.AddAlbumToQueueCommand;
+    }
+
 }

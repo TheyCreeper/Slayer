@@ -1,0 +1,114 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:SlayerApp.ViewModel"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="80"
+             x:DataType="vm:MediaBarViewModel"
+             x:Class="SlayerApp.MediaBar"
+             IsVisible="{Binding IsMediaBarVisible}"
+             Background="#1a1a1a"
+             Height="90">
+  
+  <Grid ColumnDefinitions="250,*,250" Margin="16,8">
+    
+    <!-- Left: Current Song Info -->
+    <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
+      <Border Width="56" Height="56" CornerRadius="4" ClipToBounds="True" Background="#333">
+        <TextBlock Text="♪" FontSize="24" Foreground="#666" 
+                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+      </Border>
+      <StackPanel VerticalAlignment="Center" Spacing="2">
+        <TextBlock Text="{Binding CurrentSong.Title, FallbackValue='No song playing'}" 
+                   Foreground="White" FontSize="14" FontWeight="SemiBold"
+                   MaxWidth="160" TextTrimming="CharacterEllipsis"/>
+        <TextBlock Text="{Binding CurrentSong.Album, FallbackValue=''}" 
+                   Foreground="#b3b3b3" FontSize="12"
+                   MaxWidth="160" TextTrimming="CharacterEllipsis"/>
+      </StackPanel>
+    </StackPanel>
+    
+    <!-- Center: Playback Controls -->
+    <StackPanel Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="8">
+      <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="16">
+        <!-- Shuffle -->
+        <ToggleButton Command="{Binding ToggleShuffleCommand}" 
+                Background="Transparent" BorderThickness="0" Padding="8" Cursor="Hand">
+            <ToggleButton.Styles>
+						<Style Selector="ToggleButton:pointerover PathIcon">
+							<Setter Property="Foreground" Value="White"/>
+						</Style>
+						<Style Selector="ToggleButton:checked PathIcon">
+							<Setter Property="Foreground" Value="#1DB954"/>
+						</Style>
+					</ToggleButton.Styles>
+          <PathIcon Width="16" Height="16" Foreground="#b3b3b3"
+                    Data="M10.59 9.17L5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41l-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z"/>
+        </ToggleButton>
+        
+        <!-- Previous -->
+        <Button Command="{Binding PreviousCommand}" 
+                Background="Transparent" BorderThickness="0" Padding="8" Cursor="Hand">
+          <PathIcon Width="16" Height="16" Foreground="White"
+                    Data="M6 6h2v12H6zm3.5 6l8.5 6V6z"/>
+        </Button>
+        
+        <!-- Play/Pause -->
+        <Button Command="{Binding PlayPauseCommand}" 
+                Background="White" CornerRadius="20" Width="40" Height="40" Padding="0" Cursor="Hand">
+          <Panel>
+            <PathIcon Width="16" Height="16" Foreground="Black"
+                      IsVisible="{Binding !IsPlaying}"
+                      Data="M8 5v14l11-7z"/>
+            <PathIcon Width="16" Height="16" Foreground="Black"
+                      IsVisible="{Binding IsPlaying}"
+                      Data="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+          </Panel>
+        </Button>
+        
+        <!-- Next -->
+        <Button Command="{Binding NextCommand}" 
+                Background="Transparent" BorderThickness="0" Padding="8" Cursor="Hand">
+          <PathIcon Width="16" Height="16" Foreground="White"
+                    Data="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/>
+        </Button>
+        
+        <!-- Repeat -->
+        <ToggleButton Command="{Binding ToggleRepeatCommand}" 
+                Background="Transparent" BorderThickness="0" Padding="8" Cursor="Hand">
+            <ToggleButton.Styles>
+						<Style Selector="ToggleButton:pointerover PathIcon">
+							<Setter Property="Foreground" Value="White"/>
+						</Style>
+						<Style Selector="ToggleButton:checked PathIcon">
+							<Setter Property="Foreground" Value="#1DB954"/>
+						</Style>
+					</ToggleButton.Styles>
+          <PathIcon Width="16" Height="16" Foreground="#b3b3b3"
+                    Data="M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4z"/>
+        </ToggleButton>
+      </StackPanel>
+      
+      <!-- Progress Bar -->
+      <Grid ColumnDefinitions="40,*,40" Width="400" VerticalAlignment="Top">
+        <TextBlock Grid.Column="0" Text="{Binding CurrentTimeFormatted}" 
+                   Foreground="#b3b3b3" FontSize="11" VerticalAlignment="Center" HorizontalAlignment="Right"
+                   Margin="0,0,8,0"/>
+        <Slider Grid.Column="1" 
+                Minimum="0" Maximum="{Binding Duration}" Value="{Binding CurrentPosition}"
+                VerticalAlignment="Center"/>
+        <TextBlock Grid.Column="2" Text="{Binding TotalTimeFormatted}" 
+                   Foreground="#b3b3b3" FontSize="11" VerticalAlignment="Center" HorizontalAlignment="Left"
+                   Margin="8,0,0,0"/>
+      </Grid>
+    </StackPanel>
+    
+    <!-- Right: Volume Control -->
+    <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Spacing="8">
+      <PathIcon Width="16" Height="16" Foreground="#b3b3b3"
+                Data="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+      <Slider Width="100" Minimum="0" Maximum="100" Value="{Binding Volume}" VerticalAlignment="Center"/>
+    </StackPanel>
+    
+  </Grid>
+</UserControl>

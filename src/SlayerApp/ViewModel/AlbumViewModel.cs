@@ -29,6 +29,11 @@ namespace SlayerApp.ViewModel
             ? "Unknown" 
             : _album.ReleaseDate.Split('-')[0];
 
+
+        private bool shuffle = true;
+
+        public bool ShuffleEnable { get => shuffle; set => shuffle = value; }
+
         public Task<Bitmap?> Cover => LoadCoverAsync();
 
         public ObservableCollection<SongViewModel> Songs { get; } = [];
@@ -95,6 +100,45 @@ namespace SlayerApp.ViewModel
             }
         }
 
+        [RelayCommand]
+        public void Shuffle()
+        {
+            if (!shuffle)
+            {
+                shuffle = true;
+                return;
+            } 
+            shuffle = false;
+        }
+
+        [RelayCommand]
+        private void PlayAlbum()
+        {
+            var songs = Songs.Select(s => new Song
+            {
+                Title = s.Title,
+                Artists = [s.Artist],
+                Album = Name,
+                Duration = s.Duration,
+                Path = s.Path
+            });
+            App.MediaBar.PlaySongs(songs);
+        }
+
+        [RelayCommand]
+        private void AddAlbumToQueue(AlbumViewModel album)
+        {
+            var songs = album.Songs.Select(s => new Song
+            {
+                Title = s.Title,
+                Artists = [s.Artist],
+                Album = album.Name,
+                Duration = s.Duration,
+                Path = s.Path
+            });
+            App.MediaBar.AddToQueue(songs);
+        }
+
         public bool Equals(AlbumViewModel? other)
         {
             if (other is null) return false;
@@ -117,24 +161,26 @@ namespace SlayerApp.ViewModel
     }
 
     public partial class SongViewModel : ObservableObject
-    {
-        private readonly Song _song;
-
-        public SongViewModel(Song song)
         {
-            _song = song;
-        }
+            private readonly Song _song;
 
-        public uint TrackNumber => _song.TrackNumber;
-        public string Title => _song.Title;
-        public string Artists => string.Join(", ", _song.Artists);
-        public TimeSpan Duration => _song.Duration;
-        public string DurationFormatted => Duration.ToString(@"m\:ss");
+            public SongViewModel(Song song)
+            {
+                _song = song;
+            }
 
-        [RelayCommand]
-        private void Play()
-        {
-            _song.PlayTrack();
+            public uint TrackNumber => _song.TrackNumber;
+            public string Title => _song.Title;
+            public string Artist => _song.Artists.Length > 0 ? _song.Artists[0] : string.Empty;
+            public string Artists => string.Join(", ", _song.Artists);
+            public TimeSpan Duration => _song.Duration;
+            public string DurationFormatted => Duration.ToString(@"m\:ss");
+            public string Path => _song.Path;
+
+            [RelayCommand]
+            private void Play(SongViewModel songVM)
+            {
+                App.MediaBar.PlaySong(songVM._song);
+            }
         }
     }
-}

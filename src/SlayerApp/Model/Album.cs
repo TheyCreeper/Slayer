@@ -1,5 +1,6 @@
 using iTunesSearch.Library;
 using SlayerApp;
+using SlayerApp.ViewModel;
 using System;
 using System.Dynamic;
 using System.IO;

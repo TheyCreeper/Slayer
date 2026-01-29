@@ -39,12 +39,16 @@
 										CommandParameter="{Binding}">
 									<Button.ContextFlyout>
 										<MenuFlyout>
-											<MenuItem Header="Play Album">
+											<MenuItem Header="Play Album"
+													  Command="{Binding $parent[ItemsControl].((viewmodel:LibraryViewModel)DataContext).PlayAlbumCommand}"
+													  CommandParameter="{Binding}">
 												<MenuItem.Icon>
 													<PathIcon Data="M8 5v14l11-7z"/>
 												</MenuItem.Icon>
 											</MenuItem>
-											<MenuItem Header="Add to Queue">
+											<MenuItem Header="Add to Queue"
+													  Command="{Binding $parent[ItemsControl].((viewmodel:LibraryViewModel)DataContext).AddAlbumToQueueCommand}"
+													  CommandParameter="{Binding}">
 												<MenuItem.Icon>
 													<PathIcon Data="M15 6H3v2h12V6zm0 4H3v2h12v-2zM3 16h8v-2H3v2zM17 6v8.18c-.31-.11-.65-.18-1-.18-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3V8h3V6h-5z"/>
 												</MenuItem.Icon>
@@ -126,42 +130,7 @@
 				<ContentControl.ContentTemplate>
 					<DataTemplate x:DataType="albumvm:AlbumViewModel">
 						<views:AlbumView>
-							<views:AlbumView.ContextFlyout>
-								<MenuFlyout>
-									<MenuItem Header="Play Album">
-										<MenuItem.Icon>
-											<PathIcon Data="M8 5v14l11-7z"/>
-										</MenuItem.Icon>
-									</MenuItem>
-									<MenuItem Header="Add to Queue">
-										<MenuItem.Icon>
-											<PathIcon Data="M15 6H3v2h12V6zm0 4H3v2h12v-2zM3 16h8v-2H3v2zM17 6v8.18c-.31-.11-.65-.18-1-.18-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3V8h3V6h-5z"/>
-										</MenuItem.Icon>
-									</MenuItem>
-									<Separator/>
-									<MenuItem Header="Add to Playlist">
-										<MenuItem.Icon>
-											<PathIcon Data="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
-										</MenuItem.Icon>
-									</MenuItem>
-									<Separator/>
-									<MenuItem Header="Change album art">
-										<MenuItem.Icon>
-											<PathIcon Data="M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2z"/>
-										</MenuItem.Icon>
-									</MenuItem>
-									<MenuItem Header="Pin">
-										<MenuItem.Icon>
-											<PathIcon Data="M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2z"/>
-										</MenuItem.Icon>
-									</MenuItem>
-									<MenuItem Header="Show in Explorer">
-										<MenuItem.Icon>
-											<PathIcon Data="M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2z"/>
-										</MenuItem.Icon>
-									</MenuItem>
-								</MenuFlyout>
-							</views:AlbumView.ContextFlyout>
+							<views:AlbumView.ContextFlyout/>
 						</views:AlbumView>
 					</DataTemplate>
 				</ContentControl.ContentTemplate>
