@@ -164,6 +164,9 @@ namespace SlayerApp.ViewModel
         {
             private readonly Song _song;
 
+            [ObservableProperty]
+            private bool _isCurrent;
+
             public SongViewModel(Song song)
             {
                 _song = song;
@@ -176,11 +179,13 @@ namespace SlayerApp.ViewModel
             public TimeSpan Duration => _song.Duration;
             public string DurationFormatted => Duration.ToString(@"m\:ss");
             public string Path => _song.Path;
+            public Song Song => _song;
 
             [RelayCommand]
             private void Play(SongViewModel songVM)
             {
                 App.MediaBar.PlaySong(songVM._song);
             }
+            
         }
     }

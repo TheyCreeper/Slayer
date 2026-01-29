@@ -10,13 +10,9 @@ public class Playlist
     public List<Song> trackList { get; set; } = new List<Song>();
     public ImageDrawing playlistImage { get; set; }
 
-    /// <summary>
-    /// Generates data for a Folder/song and adds it to the playlist (probably not final at all)
-    /// </summary>
-    /// <param name="filePath"></param>
-    public void AddFromPath(string filePath)
+    public Playlist()
     {
-        
+
     }
 
    

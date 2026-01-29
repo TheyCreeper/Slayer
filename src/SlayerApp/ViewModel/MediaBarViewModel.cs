@@ -96,7 +96,7 @@ public class MediaBarViewModel : INotifyPropertyChanged
 
     public bool IsPlaying => _mediaPlayer.IsPlaying;
 
-    public ObservableCollection<Song> Queue { get; } = [];
+    public ObservableCollection<SongViewModel> Queue { get; } = [];
 
     private int _currentIndex;
 
@@ -144,7 +144,7 @@ public class MediaBarViewModel : INotifyPropertyChanged
 
         foreach (var song in songList)
         {
-            Queue.Add(song);
+            Queue.Add(new SongViewModel(song));
         }
 
         if (Queue.Count > 0)
@@ -159,7 +159,7 @@ public class MediaBarViewModel : INotifyPropertyChanged
     {
         foreach (var song in songs)
         {
-            Queue.Add(song);
+            Queue.Add(new SongViewModel(song));
         }
 
         if (!IsPlaying && Queue.Count > 0 && CurrentSong == null)
@@ -177,7 +177,13 @@ public class MediaBarViewModel : INotifyPropertyChanged
             if (_currentIndex < 0 || _currentIndex >= Queue.Count)
                 return;
 
-            CurrentSong = Queue[_currentIndex];
+            // Update IsCurrent for all queue items
+            for (int i = 0; i < Queue.Count; i++)
+            {
+                Queue[i].IsCurrent = i == _currentIndex;
+            }
+
+            CurrentSong = Queue[_currentIndex].Song;
             
             if (string.IsNullOrEmpty(CurrentSong.Path) || !System.IO.File.Exists(CurrentSong.Path))
                 return;
@@ -190,7 +196,7 @@ public class MediaBarViewModel : INotifyPropertyChanged
         Duration = CurrentSong.Duration.TotalSeconds;
         TotalTimeFormatted = FormatTime(CurrentSong.Duration);
     }
-
+     
     private void PlayPause()
     {
         if (_mediaPlayer.IsPlaying)
@@ -238,12 +244,23 @@ public class MediaBarViewModel : INotifyPropertyChanged
 
     private void ToggleShuffle()
     {
+        Shuffle<SongViewModel>(Queue.ToList());
         IsShuffleEnabled = !IsShuffleEnabled;
     }
 
     private void ToggleRepeat()
     {
         IsRepeatEnabled = !IsRepeatEnabled;
+    }
+
+    public void PlayFromQueue(SongViewModel song)
+    {
+        var index = Queue.IndexOf(song);
+        if (index >= 0)
+        {
+            _currentIndex = index;
+            PlayCurrentSong();
+        }
     }
 
     private void OnPositionChanged(object? sender, MediaPlayerPositionChangedEventArgs e)
@@ -304,3 +321,4 @@ public class RelayCommand : System.Windows.Input.ICommand
     public void Execute(object? parameter) => _execute();
     public event EventHandler? CanExecuteChanged;
 }
+

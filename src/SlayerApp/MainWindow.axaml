@@ -17,6 +17,7 @@
                 <Button Padding="16" Width="200" Foreground="White" Name="Library" Click="NavigationButton_Click">Library</Button>
                 <Button Padding="16" Width="200" Foreground="White" Name="Settings" Click="NavigationButton_Click">Settings</Button>
             </StackPanel>
+            <views:QueueView DockPanel.Dock="Right" />
             
             <Panel>
                 <views:LibraryView IsVisible="True" Name="LibraryView"/>

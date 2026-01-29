@@ -1,0 +1,58 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:vm="clr-namespace:SlayerApp.ViewModel"
+			 mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="80"
+			 x:DataType="vm:MediaBarViewModel"
+			 x:Class="SlayerApp.QueueView"
+			 x:Name="QueueRoot"
+			 Background="#1a1a1a">
+
+	<Grid RowDefinitions="40,*">
+		<TextBlock Grid.Row="0" Text="Queue" FontSize="18" FontWeight="Bold" Foreground="White" Margin="12,8"/>
+		<ScrollViewer Grid.Row="1">
+			<ItemsControl ItemsSource="{Binding Queue}">
+				<ItemsControl.ItemTemplate>
+					<DataTemplate x:DataType="vm:SongViewModel">
+						<Button Classes.current="{Binding IsCurrent}"
+								Background="Transparent"
+								BorderThickness="0"
+								Padding="0"
+								HorizontalAlignment="Stretch"
+								HorizontalContentAlignment="Stretch"
+								Cursor="Hand"
+								Command="{Binding $parent[UserControl].((vm:MediaBarViewModel)DataContext).PlayFromQueue}"
+								CommandParameter="{Binding}">
+							<Button.Styles>
+								<Style Selector="Button:pointerover">
+									<Setter Property="Background" Value="#2a2a2a"/>
+								</Style>
+								<Style Selector="Button.current">
+									<Setter Property="Background" Value="#1a3d1a"/>
+								</Style>
+								<Style Selector="Button.current:pointerover">
+									<Setter Property="Background" Value="#255225"/>
+								</Style>
+							</Button.Styles>
+							<Grid ColumnDefinitions="Auto,*" Margin="12,8">
+								<Border Grid.Column="0" Width="48" Height="48" CornerRadius="4" ClipToBounds="True" Background="#333">
+									<TextBlock Text="&#9834;" FontSize="20" Foreground="#666"
+											   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+								</Border>
+								<StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2" Margin="12,0,0,0">
+									<TextBlock Text="{Binding Title, FallbackValue='Unknown Title'}"
+											   Foreground="White" FontSize="14" FontWeight="SemiBold"
+											   TextTrimming="CharacterEllipsis"/>
+									<TextBlock Text="{Binding Artists, FallbackValue='Unknown Artist'}"
+											   Foreground="#b3b3b3" FontSize="12"
+											   TextTrimming="CharacterEllipsis"/>
+								</StackPanel>
+							</Grid>
+						</Button>
+					</DataTemplate>
+				</ItemsControl.ItemTemplate>
+			</ItemsControl>
+		</ScrollViewer>
+	</Grid>
+</UserControl>
