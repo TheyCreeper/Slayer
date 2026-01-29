@@ -1,51 +1,40 @@
-﻿using System;
+﻿using SlayerApp;
+using SlayerApp.ViewModel;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 
 namespace src.SlayerApp.ViewModel;
 
-public class LibraryViewModel : INotifyPropertyChanged
+public partial class LibraryViewModel : ObservableObject
 {
-    private string _playlistName;
-    private int _songCount;
-    private int _playlistImage;
-    public string PlaylistName
-    {
-        get => _playlistName;
-        set
-        {
-            if (_playlistName != value)
-            {
-                _playlistName = value;
-                OnPropertyChanged();
-            }
-        }
-    }
+    public ObservableCollection<AlbumViewModel> Albums { get; }
 
-    public int SongCount
-    {
-        get => _songCount;
-        set
-        {
-            if (_songCount != value)
-            {
-                _songCount = value;
-                OnPropertyChanged();
-            }
-        }
-    }
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsAlbumSelected))]
+    private AlbumViewModel? _selectedAlbum;
+
+    public bool IsAlbumSelected => SelectedAlbum is not null;
 
     public LibraryViewModel()
     {
-        _playlistName = "New Playlist";
-        SongCount = 10;
+        Albums = new(App.Database.GetAlbums().Select(a => new AlbumViewModel(a)));
     }
 
-    public event PropertyChangedEventHandler PropertyChanged;
-
-    protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
+    [RelayCommand]
+    private void SelectAlbum(AlbumViewModel album)
     {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        SelectedAlbum = album;
+    }
+
+    [RelayCommand]
+    private void ClearSelection()
+    {
+        SelectedAlbum = null;
     }
 }

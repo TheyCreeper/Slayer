@@ -8,14 +8,14 @@ namespace SlayerApp.ViewModel
 {
     public class PlaylistViewModel : INotifyPropertyChanged
     {
-        PlaylistModel PlaylistModel { get; set; }
+        Playlist Playlist { get; set; }
 
 
         public PlaylistViewModel() { }
 
-        public void SetPlaylistModel(PlaylistModel model)
+        public void SetPlaylist(Playlist model)
         {
-            PlaylistModel = model;
+            Playlist = model;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

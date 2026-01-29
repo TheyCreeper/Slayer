@@ -7,7 +7,31 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
-        PlaylistModel playlist = new PlaylistModel();
+        Playlist playlist = new Playlist();
         playlist.AddFromPath("/home/theycreeper/Documents/Minecraft - Volume Alpha");
+    }
+
+    private void HideUserControls()
+    {
+        LibraryView.IsVisible = false;
+        SettingsView.IsVisible = false;
+    }
+
+    private void NavigationButton_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+    {
+        Button button = (Button)sender;
+        HideUserControls();
+        switch (button.Name)
+        {
+            case "Home":
+                LibraryView.IsVisible = true;
+                break;
+            case "Library":
+                LibraryView.IsVisible = true;
+                break;
+            case "Settings":
+                SettingsView.IsVisible = true;
+                break;
+        }
     }
 }

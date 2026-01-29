@@ -3,19 +3,23 @@
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:views="using:SlayerApp"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="SlayerApp"
     d:DesignHeight="450"
     d:DesignWidth="800"
-    mc:Ignorable="d"
-    Background="#09001c">
+    mc:Ignorable="d">
     <DockPanel>
         <!-- navigation bar -->
         <StackPanel DockPanel.Dock="Left" Width="200" Background="#1a0033">
-            <Button Padding="16" Width="200">Home</Button>
-            <Button Padding="16" Width="200">Library</Button>
+            <Button Padding="16" Width="200" Foreground="White" Name="Home" Click="NavigationButton_Click">Home</Button>
+            <Button Padding="16" Width="200" Foreground="White" Name="Library" Click="NavigationButton_Click">Library</Button>
+            <Button Padding="16" Width="200" Foreground="White" Name="Settings" Click="NavigationButton_Click">Settings</Button>
         </StackPanel>
         
-        <ContentControl Name="MainContent" />
+        <Panel>
+            <views:LibraryView IsVisible="True" Name="LibraryView"/>
+            <views:SettingsView IsVisible="False" Name="SettingsView"/>
+        </Panel>
     </DockPanel>
 </Window>

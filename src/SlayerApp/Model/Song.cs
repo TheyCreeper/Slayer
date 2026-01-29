@@ -1,8 +1,13 @@
-using System;
 using Avalonia.Controls.Primitives;
+using Avalonia.Media.Imaging;
+using System;
+using System.IO;
+using System.Linq;
+using static System.Net.Mime.MediaTypeNames;
 
 public class Song
 {
+    public string Checksum { get; set; }
     public string Path { get; set; } = string.Empty;
     public string Title { get; set; } = string.Empty;
     public string[] Artists { get; set; } = Array.Empty<string>();

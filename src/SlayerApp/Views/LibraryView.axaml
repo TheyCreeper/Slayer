@@ -1,0 +1,171 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+			 xmlns:viewmodel="clr-namespace:src.SlayerApp.ViewModel"
+			 xmlns:albumvm="clr-namespace:SlayerApp.ViewModel"
+			 xmlns:views="using:SlayerApp.Views"
+			 x:DataType="viewmodel:LibraryViewModel"
+			 x:Class="SlayerApp.LibraryView"
+			 Background="#121212">
+
+	<Panel>
+		<!-- Album Grid View (hidden when album selected) -->
+		<Grid IsVisible="{Binding !IsAlbumSelected}">
+			<ScrollViewer VerticalScrollBarVisibility="Auto" Margin="20">
+				<StackPanel>
+					<TextBlock Text="Your Library"
+							   FontSize="32"
+							   FontWeight="Bold"
+							   Foreground="White"
+							   Margin="0,0,0,20"/>
+
+					<ItemsControl ItemsSource="{Binding Albums}">
+						<ItemsControl.ItemsPanel>
+							<ItemsPanelTemplate>
+								<WrapPanel />
+							</ItemsPanelTemplate>
+						</ItemsControl.ItemsPanel>
+
+						<ItemsControl.ItemTemplate>
+							<DataTemplate x:DataType="albumvm:AlbumViewModel">
+								<Button Background="Transparent"
+										BorderThickness="0"
+										Padding="0"
+										Margin="0,0,20,20"
+										Cursor="Hand"
+										Command="{Binding $parent[ItemsControl].((viewmodel:LibraryViewModel)DataContext).SelectAlbumCommand}"
+										CommandParameter="{Binding}">
+									<Button.ContextFlyout>
+										<MenuFlyout>
+											<MenuItem Header="Play Album">
+												<MenuItem.Icon>
+													<PathIcon Data="M8 5v14l11-7z"/>
+												</MenuItem.Icon>
+											</MenuItem>
+											<MenuItem Header="Add to Queue">
+												<MenuItem.Icon>
+													<PathIcon Data="M15 6H3v2h12V6zm0 4H3v2h12v-2zM3 16h8v-2H3v2zM17 6v8.18c-.31-.11-.65-.18-1-.18-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3V8h3V6h-5z"/>
+												</MenuItem.Icon>
+											</MenuItem>
+											<Separator/>
+											<MenuItem Header="Add to Playlist">
+												<MenuItem.Icon>
+													<PathIcon Data="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+												</MenuItem.Icon>
+											</MenuItem>
+											<Separator/>
+											<MenuItem Header="Change album art">
+												<MenuItem.Icon>
+													<PathIcon Data="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>
+												</MenuItem.Icon>
+											</MenuItem>
+											<MenuItem Header="Pin">
+												<MenuItem.Icon>
+													<PathIcon Data="M16 9V4h1c.55 0 1-.45 1-1s-.45-1-1-1H7c-.55 0-1 .45-1 1s.45 1 1 1h1v5c0 1.66-1.34 3-3 3v2h5.97v7l1 1 1-1v-7H19v-2c-1.66 0-3-1.34-3-3z"/>
+												</MenuItem.Icon>
+											</MenuItem>
+											<MenuItem Header="Show in Explorer">
+												<MenuItem.Icon>
+													<PathIcon Data="M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2z"/>
+												</MenuItem.Icon>
+											</MenuItem>
+										</MenuFlyout>
+									</Button.ContextFlyout>
+									<Button.Styles>
+										<Style Selector="Button:pointerover">
+											<Setter Property="Opacity" Value="0.8"/>
+										</Style>
+									</Button.Styles>
+									<views:AlbumDisc />
+								</Button>
+							</DataTemplate>
+						</ItemsControl.ItemTemplate>
+					</ItemsControl>
+				</StackPanel>
+			</ScrollViewer>
+		</Grid>
+
+		<!-- Album Detail View (shown when album selected) -->
+		<Grid IsVisible="{Binding IsAlbumSelected}">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="Auto"/>
+				<RowDefinition Height="*"/>
+			</Grid.RowDefinitions>
+
+			<!-- Back Button -->
+			<Button Grid.Row="0"
+					Command="{Binding ClearSelectionCommand}"
+					Background="Transparent"
+					BorderThickness="0"
+					Margin="16,16,0,0"
+					Cursor="Hand"
+					HorizontalAlignment="Left">
+				<StackPanel Orientation="Horizontal" Spacing="8">
+					<PathIcon Width="16" Height="16" Foreground="White">
+						<PathIcon.Data>
+							<PathGeometry>M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z</PathGeometry>
+						</PathIcon.Data>
+					</PathIcon>
+					<TextBlock Text="Back to Library"
+							   Foreground="White"
+							   FontSize="14"
+							   VerticalAlignment="Center"/>
+				</StackPanel>
+				<Button.Styles>
+					<Style Selector="Button:pointerover">
+						<Setter Property="Opacity" Value="0.7"/>
+					</Style>
+				</Button.Styles>
+			</Button>
+
+			<!-- Album View with selected album context -->
+			<ContentControl Grid.Row="1"
+							Content="{Binding SelectedAlbum}">
+				<ContentControl.ContentTemplate>
+					<DataTemplate x:DataType="albumvm:AlbumViewModel">
+						<views:AlbumView>
+							<views:AlbumView.ContextFlyout>
+								<MenuFlyout>
+									<MenuItem Header="Play Album">
+										<MenuItem.Icon>
+											<PathIcon Data="M8 5v14l11-7z"/>
+										</MenuItem.Icon>
+									</MenuItem>
+									<MenuItem Header="Add to Queue">
+										<MenuItem.Icon>
+											<PathIcon Data="M15 6H3v2h12V6zm0 4H3v2h12v-2zM3 16h8v-2H3v2zM17 6v8.18c-.31-.11-.65-.18-1-.18-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3V8h3V6h-5z"/>
+										</MenuItem.Icon>
+									</MenuItem>
+									<Separator/>
+									<MenuItem Header="Add to Playlist">
+										<MenuItem.Icon>
+											<PathIcon Data="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+										</MenuItem.Icon>
+									</MenuItem>
+									<Separator/>
+									<MenuItem Header="Change album art">
+										<MenuItem.Icon>
+											<PathIcon Data="M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2z"/>
+										</MenuItem.Icon>
+									</MenuItem>
+									<MenuItem Header="Pin">
+										<MenuItem.Icon>
+											<PathIcon Data="M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2z"/>
+										</MenuItem.Icon>
+									</MenuItem>
+									<MenuItem Header="Show in Explorer">
+										<MenuItem.Icon>
+											<PathIcon Data="M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2z"/>
+										</MenuItem.Icon>
+									</MenuItem>
+								</MenuFlyout>
+							</views:AlbumView.ContextFlyout>
+						</views:AlbumView>
+					</DataTemplate>
+				</ContentControl.ContentTemplate>
+			</ContentControl>
+		</Grid>
+	</Panel>
+</UserControl>
