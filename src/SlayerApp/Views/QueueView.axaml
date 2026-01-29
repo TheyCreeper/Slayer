@@ -7,6 +7,7 @@
 			 x:DataType="vm:MediaBarViewModel"
 			 x:Class="SlayerApp.QueueView"
 			 x:Name="QueueRoot"
+			 IsVisible="{Binding IsQueueVisible}"
 			 Background="#1a1a1a">
 
 	<Grid RowDefinitions="40,*">

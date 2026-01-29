@@ -17,7 +17,7 @@ namespace SlayerApp.ViewModel
     /// This way the app stores only the paths to the user's media library, 
     /// and loads it all up when starting the app
     /// </summary>
-    public class GPViewModel
+    public class DBViewModel
     {
         private static readonly string[] AudioExtensions = [".mp3", ".wav", ".flac", ".aac", ".ogg", ".m4a"];
         private static readonly HashSet<string> AudioExtensionSet = new(AudioExtensions, StringComparer.OrdinalIgnoreCase);
@@ -43,14 +43,14 @@ namespace SlayerApp.ViewModel
             WriteIndented = true
         };
 
-        public GPViewModel() 
+        public DBViewModel() 
         {
             LoadLibraryPaths();
             LoadCachedData();
             LoadLibraryData();
         }
 
-        public GPViewModel(string[] libraryPaths)
+        public DBViewModel(string[] libraryPaths)
         {
             LibraryPaths = new List<string>(libraryPaths);
         }
@@ -91,7 +91,7 @@ namespace SlayerApp.ViewModel
                     {
                         var song = Song.FromFile(file);
                         song.Checksum = checksum;
-                        
+
                         if (!existingAlbumNames.Contains(song.Album))
                         {
                             var album = new Album(song.Album, song.Artists.Length > 0 ? song.Artists[0] : string.Empty, song.Path);
@@ -160,7 +160,9 @@ namespace SlayerApp.ViewModel
         public void LoadLibraryPaths()
         {   
             if (File.Exists(LibraryPathsFile))
-            {   
+            {
+                FileInfo file = new FileInfo(LibraryPathsFile);
+                string fullPath = file.FullName;
                 var json = File.ReadAllText(LibraryPathsFile);
                 var paths = JsonSerializer.Deserialize<List<string>>(json);
                 if (paths != null)

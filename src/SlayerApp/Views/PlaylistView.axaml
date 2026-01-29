@@ -1,14 +1,12 @@
-<UserControl xmlns="https://github.com/avaloniaui"
-			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-			 xmlns:vm="clr-namespace:SlayerApp.ViewModel"
-			 mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
-			 x:Class="SlayerApp.Views.AlbumView"
-			 x:DataType="vm:AlbumViewModel"
-			 Background="#121212">
-
-	<UserControl.Resources>
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:SlayerApp.ViewModel"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+			 x:DataType="vm:PlaylistViewModel"
+             x:Class="SlayerApp.PlaylistView">
+  <UserControl.Resources>
 		<DrawingImage x:Key="PlayIcon">
 			<DrawingImage.Drawing>
 				<GeometryDrawing Brush="Black" Geometry="M8 5v14l11-7z"/>
@@ -59,26 +57,17 @@
 					<StackPanel Orientation="Horizontal"
 								Margin="0,16,0,0"
 								Spacing="4">
-						<TextBlock Text="{Binding Artist}"
+						<TextBlock Text="{Binding Name}"
 								   FontSize="14"
 								   FontWeight="Bold"
 								   Foreground="White"/>
-						<TextBlock Text="�"
-								   FontSize="14"
-								   Foreground="#B3B3B3"/>
-						<TextBlock Text="{Binding ReleaseYear}"
-								   FontSize="14"
-								   Foreground="#B3B3B3"/>
-						<TextBlock Text="�"
-								   FontSize="14"
-								   Foreground="#B3B3B3"/>
 						<TextBlock FontSize="14"
 								   Foreground="#B3B3B3">
 							<TextBlock.Text>
-								<MultiBinding StringFormat="{}{0} songs, {1}">
+								<!--<MultiBinding StringFormat="{}{0} songs, {1}">
 									<Binding Path="SongCount"/>
 									<Binding Path="TotalDuration"/>
-								</MultiBinding>
+								</MultiBinding>-->
 							</TextBlock.Text>
 						</TextBlock>
 					</StackPanel>
@@ -96,7 +85,7 @@
 						Background="#2670B9"
 						BorderThickness="0"
 						Cursor="Hand"
-						Command="{Binding PlayAlbumCommand}">
+						Command="{Binding PlayPlaylistCommand}">
 					<Button.Styles>
 						<Style Selector="Button:pointerover">
 							<Setter Property="Background" Value="#1ED760"/>
@@ -116,7 +105,7 @@
 							  BorderThickness="0"
 							  Cursor="Hand"
 							  Opacity="0.7"
-							  IsChecked="{Binding ShuffleEnable}"
+							  IsChecked="{Binding Shuffle}"
 							  Command="{Binding ToggleShuffleCommand}">
 					<ToggleButton.Styles>
 						<Style Selector="ToggleButton:pointerover PathIcon">
@@ -142,7 +131,7 @@
 					<Button.Flyout>
 						<MenuFlyout>
 							<MenuItem Header="Add to Queue"
-									  Command="{Binding AddAlbumToQueueCommand}">
+									  Command="{Binding AddPlaylistToQueueCommand}">
 								<MenuItem.Icon>
 									<PathIcon Data="M15 6H3v2h12V6zm0 4H3v2h12v-2zM3 16h8v-2H3v2zM17 6v8.18c-.31-.11-.65-.18-1-.18-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3V8h3V6h-5z"/>
 								</MenuItem.Icon>
@@ -154,7 +143,8 @@
 								</MenuItem.Icon>
 							</MenuItem>
 							<Separator/>
-							<MenuItem Header="Change album art">
+							<MenuItem Header="Change playlist image"
+									  Command="{Binding ChangePlaylistImageCommand}">
 								<MenuItem.Icon>
 									<PathIcon Data="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>
 								</MenuItem.Icon>
@@ -210,7 +200,7 @@
 			<Border Height="1" Background="#282828" Margin="24,0"/>
 
 			<!-- Song List -->
-			<ItemsControl ItemsSource="{Binding Songs}" Margin="0,8,0,24">
+			<ItemsControl ItemsSource="{Binding TrackList}" Margin="0,8,0,24">
 				<ItemsControl.ItemTemplate>
 					<DataTemplate x:DataType="vm:SongViewModel">
 						<Border Padding="24,8"

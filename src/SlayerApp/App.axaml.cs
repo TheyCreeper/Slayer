@@ -10,7 +10,7 @@ namespace SlayerApp;
 
 public partial class App : Application
 {
-    public static GPViewModel Database;
+    public static DBViewModel Database;
     public static iTunesSearchManager s_SearchManager = new();
     public static MediaBarViewModel MediaBar { get; } = new();
 

@@ -4,35 +4,20 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using LibVLCSharp.Shared;
+using SlayerApp.utils;
 
 namespace SlayerApp.ViewModel;
 
-public class MediaBarViewModel : INotifyPropertyChanged
+public partial class MediaBarViewModel : ObservableObject
 {
     private static readonly LibVLC s_libVLC = new();
     private readonly MediaPlayer _mediaPlayer;
 
-    private bool _isMediaBarVisible;
-    public bool IsMediaBarVisible
-    {
-        get => _isMediaBarVisible;
-        set { _isMediaBarVisible = value; OnPropertyChanged(); }
-    }
-
-    private bool _isShuffleEnabled;
-    public bool IsShuffleEnabled
-    {
-        get => _isShuffleEnabled;
-        set { _isShuffleEnabled = value; OnPropertyChanged(); }
-    }
-
-    private bool _isRepeatEnabled;
-    public bool IsRepeatEnabled
-    {
-        get => _isRepeatEnabled;
-        set { _isRepeatEnabled = value; OnPropertyChanged(); }
-    }
+    [ObservableProperty]
+    private bool _isMediaBarVisible, _isQueueVisible, _isShuffleEnabled, _isRepeatEnabled;
 
     private Song? _currentSong;
     public Song? CurrentSong
@@ -56,19 +41,14 @@ public class MediaBarViewModel : INotifyPropertyChanged
                 {
                     _mediaPlayer.Position = (float)(value / Duration);
                 }
-                CurrentTimeFormatted = FormatTime(TimeSpan.FromSeconds(value));
+                CurrentTimeFormatted = QueueListManager.FormatTime(TimeSpan.FromSeconds(value));
             }
         }
     }
-
+    [ObservableProperty]
     private double _duration;
-    public double Duration
-    {
-        get => _duration;
-        set { _duration = value; OnPropertyChanged(); }
-    }
 
-    private double _volume = 100;
+    private double _volume = 50;
     public double Volume
     {
         get => _volume;
@@ -93,19 +73,10 @@ public class MediaBarViewModel : INotifyPropertyChanged
         get => _totalTimeFormatted;
         set { _totalTimeFormatted = value; OnPropertyChanged(); }
     }
-
     public bool IsPlaying => _mediaPlayer.IsPlaying;
-
     public ObservableCollection<SongViewModel> Queue { get; } = [];
 
     private int _currentIndex;
-
-    // Commands
-    public RelayCommand PlayPauseCommand { get; }
-    public RelayCommand PreviousCommand { get; }
-    public RelayCommand NextCommand { get; }
-    public RelayCommand ToggleShuffleCommand { get; }
-    public RelayCommand ToggleRepeatCommand { get; }
 
     public MediaBarViewModel()
     {
@@ -115,14 +86,9 @@ public class MediaBarViewModel : INotifyPropertyChanged
         _mediaPlayer.Playing += (_, _) => OnPropertyChanged(nameof(IsPlaying));
         _mediaPlayer.Paused += (_, _) => OnPropertyChanged(nameof(IsPlaying));
         _mediaPlayer.Stopped += (_, _) => OnPropertyChanged(nameof(IsPlaying));
-
-        PlayPauseCommand = new RelayCommand(PlayPause);
-        PreviousCommand = new RelayCommand(Previous);
-        NextCommand = new RelayCommand(Next);
-        ToggleShuffleCommand = new RelayCommand(ToggleShuffle);
-        ToggleRepeatCommand = new RelayCommand(ToggleRepeat);
     }
 
+    [RelayCommand]
     public void PlaySong(Song song)
     {
         Queue.Clear();
@@ -130,21 +96,23 @@ public class MediaBarViewModel : INotifyPropertyChanged
         _currentIndex = 0;
         PlayCurrentSong(false);
         IsMediaBarVisible = true;
+        IsQueueVisible = false;
     }
 
-    public void PlaySongs(IEnumerable<Song> songs)
+    [RelayCommand]
+    public void PlaySongs(IEnumerable<SongViewModel> songs)
     {
         Queue.Clear();
         var songList = songs.ToList();
 
         if (IsShuffleEnabled)
         {
-            Shuffle(songList);
+            QueueListManager.Shuffle(ref songList);
         }
 
         foreach (var song in songList)
         {
-            Queue.Add(new SongViewModel(song));
+            Queue.Add(song);
         }
 
         if (Queue.Count > 0)
@@ -152,14 +120,20 @@ public class MediaBarViewModel : INotifyPropertyChanged
             _currentIndex = 0;
             PlayCurrentSong();
             IsMediaBarVisible = true;
+            IsQueueVisible = true;
         }
     }
 
-    public void AddToQueue(IEnumerable<Song> songs)
+    public void AddSingleToQueue(SongViewModel song)
+    {
+        Queue.Add(song);
+    }
+
+    public void AddToQueue(IEnumerable<SongViewModel> songs)
     {
         foreach (var song in songs)
         {
-            Queue.Add(new SongViewModel(song));
+            Queue.Add(song);
         }
 
         if (!IsPlaying && Queue.Count > 0 && CurrentSong == null)
@@ -167,9 +141,11 @@ public class MediaBarViewModel : INotifyPropertyChanged
             _currentIndex = 0;
             PlayCurrentSong();
             IsMediaBarVisible = true;
+            IsQueueVisible = true;
         }
     }
 
+    [RelayCommand]
     private void PlayCurrentSong(bool useQueue = true)
     {
         if (useQueue)
@@ -194,9 +170,10 @@ public class MediaBarViewModel : INotifyPropertyChanged
         _mediaPlayer.Play();
         
         Duration = CurrentSong.Duration.TotalSeconds;
-        TotalTimeFormatted = FormatTime(CurrentSong.Duration);
+        TotalTimeFormatted = QueueListManager.FormatTime(CurrentSong.Duration);
     }
-     
+
+    [RelayCommand]
     private void PlayPause()
     {
         if (_mediaPlayer.IsPlaying)
@@ -209,6 +186,7 @@ public class MediaBarViewModel : INotifyPropertyChanged
         }
     }
 
+    [RelayCommand]
     private void Previous()
     {
         if (Queue.Count == 0)
@@ -221,6 +199,7 @@ public class MediaBarViewModel : INotifyPropertyChanged
         PlayCurrentSong();
     }
 
+    [RelayCommand]
     private void Next()
     {
         if (Queue.Count == 0)
@@ -242,17 +221,24 @@ public class MediaBarViewModel : INotifyPropertyChanged
         PlayCurrentSong();
     }
 
+    [RelayCommand]
     private void ToggleShuffle()
     {
-        Shuffle<SongViewModel>(Queue.ToList());
         IsShuffleEnabled = !IsShuffleEnabled;
+        if (IsShuffleEnabled)
+        {
+            var tempQueue = new ObservableCollection<SongViewModel>(Queue);
+            QueueListManager.Shuffle<SongViewModel>(ref tempQueue);
+        }
     }
 
+    [RelayCommand]
     private void ToggleRepeat()
     {
         IsRepeatEnabled = !IsRepeatEnabled;
     }
 
+    [RelayCommand]
     public void PlayFromQueue(SongViewModel song)
     {
         var index = Queue.IndexOf(song);
@@ -272,7 +258,7 @@ public class MediaBarViewModel : INotifyPropertyChanged
             {
                 _currentPosition = position;
                 OnPropertyChanged(nameof(CurrentPosition));
-                CurrentTimeFormatted = FormatTime(TimeSpan.FromSeconds(position));
+                CurrentTimeFormatted = QueueListManager.FormatTime(TimeSpan.FromSeconds(position));
             }
         });
     }
@@ -281,44 +267,21 @@ public class MediaBarViewModel : INotifyPropertyChanged
     {
         Avalonia.Threading.Dispatcher.UIThread.Post(Next);
     }
-
-    private static void Shuffle<T>(List<T> list)
-    {
-        var rng = Random.Shared;
-        int n = list.Count;
-        while (n > 1)
-        {
-            n--;
-            int k = rng.Next(n + 1);
-            (list[k], list[n]) = (list[n], list[k]);
-        }
-    }
-
-    private static string FormatTime(TimeSpan time)
-    {
-        return time.TotalHours >= 1
-            ? $"{(int)time.TotalHours}:{time.Minutes:D2}:{time.Seconds:D2}"
-            : $"{time.Minutes}:{time.Seconds:D2}";
-    }
-
-    public event PropertyChangedEventHandler? PropertyChanged;
-    protected void OnPropertyChanged([CallerMemberName] string? name = null)
-        => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 }
 
-public class RelayCommand : System.Windows.Input.ICommand
-{
-    private readonly Action _execute;
-    private readonly Func<bool>? _canExecute;
+//public class RelayCommand : System.Windows.Input.ICommand
+//{
+//    private readonly Action _execute;
+//    private readonly Func<bool>? _canExecute;
 
-    public RelayCommand(Action execute, Func<bool>? canExecute = null)
-    {
-        _execute = execute;
-        _canExecute = canExecute;
-    }
+//    public RelayCommand(Action execute, Func<bool>? canExecute = null)
+//    {
+//        _execute = execute;
+//        _canExecute = canExecute;
+//    }
 
-    public bool CanExecute(object? parameter) => _canExecute?.Invoke() ?? true;
-    public void Execute(object? parameter) => _execute();
-    public event EventHandler? CanExecuteChanged;
-}
+//    public bool CanExecute(object? parameter) => _canExecute?.Invoke() ?? true;
+//    public void Execute(object? parameter) => _execute();
+//    public event EventHandler? CanExecuteChanged;
+//}
 
