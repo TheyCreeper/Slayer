@@ -43,7 +43,7 @@ namespace SlayerApp.ViewModel
             WriteIndented = true
         };
 
-        public DBViewModel() 
+        public DBViewModel()
         {
             LoadLibraryPaths();
             LoadCachedData();
@@ -107,7 +107,12 @@ namespace SlayerApp.ViewModel
 
             SongList.AddRange(newSongs);
             AlbumList.AddRange(newAlbums);
-            
+
+            foreach (var playlist in Playlists)
+            {
+                playlist.SongCount = playlist.trackList.Count;
+            }
+
             // Save updated data to cache
             SaveCachedData();
         }
@@ -144,10 +149,10 @@ namespace SlayerApp.ViewModel
         public List<Playlist> GetPlaylists() { return Playlists; }
         public List<Genre> GetGenres() { return GenreList; }
         public List<string> GetLibraryPaths() { return LibraryPaths; }
-        public void AddLibraryPath(string pathToAdd) 
-        { 
-            LibraryPaths.Add(pathToAdd); 
-            SaveLibraryPaths(); 
+        public void AddLibraryPath(string pathToAdd)
+        {
+            LibraryPaths.Add(pathToAdd);
+            SaveLibraryPaths();
         }
 
         public void SaveLibraryPaths()
@@ -158,7 +163,7 @@ namespace SlayerApp.ViewModel
         }
 
         public void LoadLibraryPaths()
-        {   
+        {
             if (File.Exists(LibraryPathsFile))
             {
                 FileInfo file = new FileInfo(LibraryPathsFile);
@@ -245,6 +250,56 @@ namespace SlayerApp.ViewModel
         {
             var extension = Path.GetExtension(filePath);
             return AudioExtensionSet.Contains(extension);
+        }
+
+        public void AddData(Song song)
+        {
+            var existingIndex = SongList.FindIndex(s => s.Checksum == song.Checksum);
+            if (existingIndex >= 0)
+                SongList[existingIndex] = song;
+            else
+                SongList.Add(song);
+            SaveCachedData();
+        }
+
+        public void AddData(Album album)
+        {
+            var existingIndex = AlbumList.FindIndex(a => a.Name == album.Name);
+            if (existingIndex >= 0)
+                AlbumList[existingIndex] = album;
+            else
+                AlbumList.Add(album);
+        }
+
+        public void AddData(Playlist playlist)
+        {
+            var existingIndex = Playlists.FindIndex(p => p.Name == playlist.Name);
+            if (existingIndex >= 0)
+                Playlists[existingIndex] = playlist;
+            else
+                Playlists.Add(playlist);
+            
+            SaveCachedData();
+        }
+
+        public void AddData(Genre genre)
+        {
+            var existingIndex = GenreList.FindIndex(g => g.Name == genre.Name);
+            if (existingIndex >= 0)
+                GenreList[existingIndex] = genre;
+            else
+                GenreList.Add(genre);
+            SaveCachedData();
+        }
+
+        public void AddData(string libraryPath)
+        {
+            if (!LibraryPaths.Contains(libraryPath, StringComparer.OrdinalIgnoreCase))
+            {
+                LibraryPaths.Add(libraryPath);
+                SaveLibraryPaths();
+            }
+            SaveCachedData();
         }
     }
 }

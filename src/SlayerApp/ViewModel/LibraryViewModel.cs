@@ -17,15 +17,36 @@ public partial class LibraryViewModel : ObservableObject
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsAlbumSelected))]
+    [NotifyPropertyChangedFor(nameof(AnyMediaCollectionSelected))]
     private AlbumViewModel? _selectedAlbum;
 
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsPlaylistSeleted))]
+    [NotifyPropertyChangedFor(nameof(AnyMediaCollectionSelected))]
+    private PlaylistViewModel? _selectedPlaylist;
+
+    public bool AnyMediaCollectionSelected
+    {
+        get
+        {
+            return new[]
+            {
+                IsAlbumSelected,
+                IsPlaylistSeleted
+            }.Any(x => x);
+        }
+    }
+
     public bool IsAlbumSelected => SelectedAlbum is not null;
+    public bool IsPlaylistSeleted => SelectedPlaylist is not null;
 
     public LibraryViewModel()
     {
         Albums = new(App.Database.GetAlbums().Select(a => new AlbumViewModel(a)));
+        Playlists = new(App.Database.GetPlaylists().Select(p => new PlaylistViewModel(p)));
     }
 
+    #region album
     [RelayCommand]
     private void SelectAlbum(AlbumViewModel album)
     {
@@ -36,6 +57,7 @@ public partial class LibraryViewModel : ObservableObject
     private void ClearSelection()
     {
         SelectedAlbum = null;
+        SelectedPlaylist = null;
     }
 
     [RelayCommand]
@@ -49,6 +71,8 @@ public partial class LibraryViewModel : ObservableObject
     {
         _ = album.AddAlbumToQueueCommand;
     }
+    #endregion album
+    #region playlist
 
     [ObservableProperty]
     private ObservableCollection<PlaylistViewModel> _playlists = new();
@@ -56,7 +80,7 @@ public partial class LibraryViewModel : ObservableObject
     public bool HasPlaylists => Playlists.Count > 0;
 
     [ObservableProperty]
-    private bool _isCreatePlaylistPromptVisible;
+    private bool _isCreatePlaylistPromptVisible, _isAddToPlaylistPromptVisible;
 
     [ObservableProperty]
     private string _newPlaylistName = string.Empty;
@@ -82,16 +106,20 @@ public partial class LibraryViewModel : ObservableObject
         {
             var newPlaylist = new PlaylistViewModel(NewPlaylistName.Trim());
             Playlists.Add(newPlaylist);
+            App.Playlists.Add(newPlaylist);
+            App.Database.AddData(newPlaylist.Playlist);
             OnPropertyChanged(nameof(HasPlaylists));
         }
         IsCreatePlaylistPromptVisible = false;
         NewPlaylistName = string.Empty;
     }
 
+
+
     [RelayCommand]
     private void SelectPlaylist(PlaylistViewModel playlist)
     {
-        // Handle playlist selection
+        SelectedPlaylist = playlist;
     }
 
     [RelayCommand]
@@ -118,5 +146,5 @@ public partial class LibraryViewModel : ObservableObject
         Playlists.Remove(playlist);
         OnPropertyChanged(nameof(HasPlaylists));
     }
-
+    #endregion playlist
 }

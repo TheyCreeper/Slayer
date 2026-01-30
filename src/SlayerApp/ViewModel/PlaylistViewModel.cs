@@ -51,7 +51,8 @@ namespace SlayerApp.ViewModel
         public PlaylistViewModel(Playlist playlist) 
         {
             Playlist = playlist;
-            TrackList = new ObservableCollection<SongViewModel>(playlist.trackList);
+            TrackList = new ObservableCollection<SongViewModel>(); 
+            foreach (Song song in playlist.trackList) TrackList.Add(new(song));
             Shuffle = playlist.Shuffle;
         }
         private string FormatTotalDuration()
@@ -153,6 +154,17 @@ namespace SlayerApp.ViewModel
         private void AddPlaylistToQueue(PlaylistViewModel playlist)
         {
             App.MediaBar.AddToQueue(playlist.TrackList);
+        }
+
+        public void AddToPlaylist(AlbumViewModel targetAlbum)
+        {
+            foreach(SongViewModel song in targetAlbum.Songs)
+            {
+                Playlist.trackList.Add(song.Song);
+                this.TrackList.Add(song);
+            }
+            App.Database.AddData(this.Playlist);
+            App.RefreshPlaylists();
         }
 
     }
