@@ -1,5 +1,6 @@
 using Avalonia.Controls.Primitives;
 using Avalonia.Media.Imaging;
+using SlayerApp;
 using System;
 using System.IO;
 using System.Linq;
@@ -7,7 +8,7 @@ using static System.Net.Mime.MediaTypeNames;
 
 public class Song
 {
-    public string Checksum { get; set; }
+    public string Checksum { get; set; } = string.Empty;
     public string Path { get; set; } = string.Empty;
     public string Title { get; set; } = string.Empty;
     public string[] Artists { get; set; } = Array.Empty<string>();
@@ -15,8 +16,9 @@ public class Song
     public uint TrackNumber { get; set; }
     public uint Year { get; set; }
     public TimeSpan Duration { get; set; }
+    public bool IsCurrent { get; set; }
 
-    public Song() {}
+    public Song(Song song) {}
 
     public Song(string title, string[] artists, string album, TimeSpan duration, string path)
     {
@@ -27,15 +29,11 @@ public class Song
         Path = path;
     }
 
-    // TODO
-    /* 
-        
-    */
-
-    public void PlayTrack()
+    public void Play()
     {
-        throw new NotImplementedException();
+        App.MediaBar.PlaySong(this);
     }
+
 
     public static Song FromFile(string path)
     {

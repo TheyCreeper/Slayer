@@ -16,6 +16,12 @@ public partial class MainWindow : Window
         SettingsView.IsVisible = false;
     }
 
+    public void AddSongToQueue()
+    {
+        App.MediaBar.AddSingleToQueue(this);
+        if (!App.MediaBar.IsQueueVisible) App.MediaBar.IsQueueVisible = true;
+    }
+
     private void NavigationButton_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
     {
         Button button = (Button)sender;

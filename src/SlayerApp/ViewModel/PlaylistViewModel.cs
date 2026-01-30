@@ -26,7 +26,7 @@ namespace SlayerApp.ViewModel
         private Playlist _playlist;
 
         [ObservableProperty]
-        private ObservableCollection<SongViewModel> _trackList;
+        private ObservableCollection<Song> _trackList;
 
         [ObservableProperty]
         private bool _shuffle;
@@ -51,8 +51,8 @@ namespace SlayerApp.ViewModel
         public PlaylistViewModel(Playlist playlist) 
         {
             Playlist = playlist;
-            TrackList = new ObservableCollection<SongViewModel>(); 
-            foreach (Song song in playlist.trackList) TrackList.Add(new(song));
+            TrackList = new ObservableCollection<Song>(); 
+            foreach (Song song in playlist.trackList) TrackList.Add(song);
             Shuffle = playlist.Shuffle;
         }
         private string FormatTotalDuration()
@@ -142,7 +142,7 @@ namespace SlayerApp.ViewModel
             if (Shuffle)
             {
                 App.MediaBar.IsShuffleEnabled = true;
-                var shuffledSongs = new ObservableCollection<SongViewModel>(TrackList);
+                var shuffledSongs = new ObservableCollection<Song>(TrackList);
                 QueueListManager.Shuffle(ref shuffledSongs);
                 App.MediaBar.PlaySongs(shuffledSongs);
                 return;
@@ -158,7 +158,7 @@ namespace SlayerApp.ViewModel
 
         public void AddToPlaylist(AlbumViewModel targetAlbum)
         {
-            foreach(SongViewModel song in targetAlbum.Songs)
+            foreach(Song song in targetAlbum.Songs)
             {
                 Playlist.trackList.Add(song.Song);
                 this.TrackList.Add(song);

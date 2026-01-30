@@ -15,7 +15,7 @@
 		<ScrollViewer Grid.Row="1">
 			<ItemsControl ItemsSource="{Binding Queue}">
 				<ItemsControl.ItemTemplate>
-					<DataTemplate x:DataType="vm:SongViewModel">
+					<DataTemplate x:DataType="vm:Song">
 						<Button Classes.current="{Binding IsCurrent}"
 								Background="Transparent"
 								BorderThickness="0"

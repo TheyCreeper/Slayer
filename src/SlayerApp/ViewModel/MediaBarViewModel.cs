@@ -74,7 +74,7 @@ public partial class MediaBarViewModel : ObservableObject
         set { _totalTimeFormatted = value; OnPropertyChanged(); }
     }
     public bool IsPlaying => _mediaPlayer.IsPlaying;
-    public ObservableCollection<SongViewModel> Queue { get; } = [];
+    public ObservableCollection<Song> Queue { get; } = [];
 
     private int _currentIndex;
 
@@ -100,7 +100,7 @@ public partial class MediaBarViewModel : ObservableObject
     }
 
     [RelayCommand]
-    public void PlaySongs(IEnumerable<SongViewModel> songs)
+    public void PlaySongs(IEnumerable<Song> songs)
     {
         Queue.Clear();
         var songList = songs.ToList();
@@ -124,12 +124,12 @@ public partial class MediaBarViewModel : ObservableObject
         }
     }
 
-    public void AddSingleToQueue(SongViewModel song)
+    public void AddSingleToQueue(Song song)
     {
         Queue.Add(song);
     }
 
-    public void AddToQueue(IEnumerable<SongViewModel> songs)
+    public void AddToQueue(IEnumerable<Song> songs)
     {
         foreach (var song in songs)
         {
@@ -159,7 +159,7 @@ public partial class MediaBarViewModel : ObservableObject
                 Queue[i].IsCurrent = i == _currentIndex;
             }
 
-            CurrentSong = Queue[_currentIndex].Song;
+            CurrentSong = Queue[_currentIndex];
             
             if (string.IsNullOrEmpty(CurrentSong.Path) || !System.IO.File.Exists(CurrentSong.Path))
                 return;
@@ -227,8 +227,8 @@ public partial class MediaBarViewModel : ObservableObject
         IsShuffleEnabled = !IsShuffleEnabled;
         if (IsShuffleEnabled)
         {
-            var tempQueue = new ObservableCollection<SongViewModel>(Queue);
-            QueueListManager.Shuffle<SongViewModel>(ref tempQueue);
+            var tempQueue = new ObservableCollection<Song>(Queue);
+            QueueListManager.Shuffle<Song>(ref tempQueue);
         }
     }
 
@@ -239,7 +239,7 @@ public partial class MediaBarViewModel : ObservableObject
     }
 
     [RelayCommand]
-    public void PlayFromQueue(SongViewModel song)
+    public void PlayFromQueue(Song song)
     {
         var index = Queue.IndexOf(song);
         if (index >= 0)

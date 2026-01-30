@@ -202,7 +202,7 @@
 			<!-- Song List -->
 			<ItemsControl ItemsSource="{Binding TrackList}" Margin="0,8,0,24">
 				<ItemsControl.ItemTemplate>
-					<DataTemplate x:DataType="vm:SongViewModel">
+					<DataTemplate x:DataType="vm:Song">
 						<Border Padding="24,8"
 								Background="Transparent"
 								Cursor="Hand"
