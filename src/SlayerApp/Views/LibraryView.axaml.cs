@@ -21,7 +21,7 @@ public partial class LibraryView : UserControl
             menuItem.SelectedItem is PlaylistViewModel targetPlaylist &&
             menuItem.DataContext is AlbumViewModel sourceAlbum)
         {
-            targetPlaylist.AddToPlaylist(sourceAlbum);
+            targetPlaylist.AddToPlaylist(sourceAlbum.Album);
         }
     }
 

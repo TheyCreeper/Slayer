@@ -156,12 +156,11 @@ namespace SlayerApp.ViewModel
             App.MediaBar.AddToQueue(playlist.TrackList);
         }
 
-        public void AddToPlaylist(AlbumViewModel targetAlbum)
+        public void AddToPlaylist(Album targetAlbum)
         {
-            foreach(Song song in targetAlbum.Songs)
+            foreach(Song song in App.Database.GetSongs().Where(x => x.Album == targetAlbum.Name))
             {
-                Playlist.trackList.Add(song.Song);
-                this.TrackList.Add(song);
+                this.Playlist.trackList.Add(song);
             }
             App.Database.AddData(this.Playlist);
             App.RefreshPlaylists();

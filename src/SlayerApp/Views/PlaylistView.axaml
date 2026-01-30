@@ -19,7 +19,6 @@
 
 			<!-- Header Section with Album Art and Info -->
 			<Grid Margin="24" ColumnDefinitions="Auto,*">
-
 				<!-- Album Cover -->
 				<Border Grid.Column="0"
 						Width="232" Height="232"
@@ -200,7 +199,7 @@
 			<Border Height="1" Background="#282828" Margin="24,0"/>
 
 			<!-- Song List -->
-			<ItemsControl ItemsSource="{Binding TrackList}" Margin="0,8,0,24">
+			<ItemsControl ItemsSource="{Binding TrackList, UpdateSourceTrigger=PropertyChanged}" Margin="0,8,0,24">
 				<ItemsControl.ItemTemplate>
 					<DataTemplate x:DataType="vm:Song">
 						<Border Padding="24,8"
