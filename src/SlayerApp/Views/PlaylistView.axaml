@@ -3,6 +3,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="using:SlayerApp.ViewModel"
+             xmlns:model="using:SlayerApp.Model"
+			 xmlns:local="using:SlayerApp"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
 			 x:DataType="vm:PlaylistViewModel"
              x:Class="SlayerApp.Views.PlaylistView">
@@ -201,7 +203,7 @@
 			<!-- Song List -->
 			<ItemsControl ItemsSource="{Binding TrackList, UpdateSourceTrigger=PropertyChanged}" Margin="0,8,0,24">
 				<ItemsControl.ItemTemplate>
-					<DataTemplate x:DataType="vm:Song">
+					<DataTemplate x:DataType="model:Song">
 						<Border Padding="24,8"
 								Background="Transparent"
 								Cursor="Hand"
@@ -209,8 +211,7 @@
 							<Border.ContextFlyout>
 								<MenuFlyout>
 									<MenuItem Header="Add to queue"
-											  Command="{Binding AddSongToQueueCommand}"
-											  CommandParameter="{Binding}">
+											  Command="{Binding AddToQueue}">
 										<MenuItem.Icon>
 											<PathIcon Data="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
 										</MenuItem.Icon>
@@ -258,8 +259,7 @@
 											   Name="TrackNum"/>
 									<Button Background="Transparent"
 											BorderThickness="0"
-											Command="{Binding PlayCommand}"
-											CommandParameter="{Binding}"
+											Command="{Binding Play}"
 											Name="PlayBtn"
 											HorizontalAlignment="Center"
 											VerticalAlignment="Center"

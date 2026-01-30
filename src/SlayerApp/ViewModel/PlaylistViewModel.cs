@@ -3,7 +3,7 @@ using Avalonia.Media.Imaging;
 using Avalonia.Platform.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using iTunesSearch.Library.Models;
+using SlayerApp.Model;
 using SlayerApp.utils;
 using System;
 using System.Collections.Generic;
@@ -25,8 +25,11 @@ namespace SlayerApp.ViewModel
         [ObservableProperty]
         private Playlist _playlist;
 
-        [ObservableProperty]
-        private ObservableCollection<Song> _trackList;
+        public ObservableCollection<Song> TrackList { get
+            {
+                return Playlist.trackList;
+            } 
+        }
 
         [ObservableProperty]
         private bool _shuffle;
@@ -43,7 +46,6 @@ namespace SlayerApp.ViewModel
         }
 
         public PlaylistViewModel() { }
-
         public PlaylistViewModel(string name) 
         {
             Playlist = new Playlist(name);
@@ -51,8 +53,6 @@ namespace SlayerApp.ViewModel
         public PlaylistViewModel(Playlist playlist) 
         {
             Playlist = playlist;
-            TrackList = new ObservableCollection<Song>(); 
-            foreach (Song song in playlist.trackList) TrackList.Add(song);
             Shuffle = playlist.Shuffle;
         }
         private string FormatTotalDuration()
@@ -155,16 +155,5 @@ namespace SlayerApp.ViewModel
         {
             App.MediaBar.AddToQueue(playlist.TrackList);
         }
-
-        public void AddToPlaylist(Album targetAlbum)
-        {
-            foreach(Song song in App.Database.GetSongs().Where(x => x.Album == targetAlbum.Name))
-            {
-                this.Playlist.trackList.Add(song);
-            }
-            App.Database.AddData(this.Playlist);
-            App.RefreshPlaylists();
-        }
-
     }
 }

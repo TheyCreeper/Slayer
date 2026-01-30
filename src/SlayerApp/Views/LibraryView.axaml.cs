@@ -2,8 +2,10 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
+using SlayerApp.Model;
 using SlayerApp.ViewModel;
 using src.SlayerApp.ViewModel;
+using System.Linq;
 
 namespace SlayerApp;
 
@@ -18,10 +20,12 @@ public partial class LibraryView : UserControl
     private void AddAlbumToPlaylist_Click(object? sender, RoutedEventArgs e)
     {
         if (sender is MenuItem menuItem && 
-            menuItem.SelectedItem is PlaylistViewModel targetPlaylist &&
+            menuItem.SelectedItem is Playlist targetPlaylist &&
             menuItem.DataContext is AlbumViewModel sourceAlbum)
         {
-            targetPlaylist.AddToPlaylist(sourceAlbum.Album);
+            targetPlaylist.AddTracks(App.Database
+                .GetSongs()
+                .Where(x => x.Album == sourceAlbum.Name));
         }
     }
 

@@ -5,6 +5,7 @@
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			 mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
 			 xmlns:viewmodel="clr-namespace:src.SlayerApp.ViewModel"
+			 xmlns:model="using:SlayerApp.Model"
 			 xmlns:vm="clr-namespace:SlayerApp.ViewModel"
 			 xmlns:views="using:SlayerApp.Views"
 			 x:DataType="viewmodel:LibraryViewModel"
@@ -158,14 +159,14 @@
 											</MenuItem>
 											<Separator/>
 											<MenuItem Header="Add to Playlist"
-													  x:DataType="vm:PlaylistViewModel"
+													  x:DataType="model:Playlist"
 													  ItemsSource="{x:Static local:App.Playlists}"
 													  Click="AddAlbumToPlaylist_Click">
 												<MenuItem.Icon>
 													<PathIcon Data="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
 												</MenuItem.Icon>
 												<MenuItem.ItemTemplate>
-													<DataTemplate x:DataType="vm:PlaylistViewModel">
+													<DataTemplate x:DataType="model:Playlist">
 														<TextBlock Text="{Binding Name}"/>
 													</DataTemplate>
 												</MenuItem.ItemTemplate>

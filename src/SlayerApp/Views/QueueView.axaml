@@ -4,6 +4,7 @@
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			 xmlns:vm="clr-namespace:SlayerApp.ViewModel"
 			 mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="80"
+			 xmlns:model="using:SlayerApp.Model"
 			 x:DataType="vm:MediaBarViewModel"
 			 x:Class="SlayerApp.QueueView"
 			 x:Name="QueueRoot"
@@ -15,7 +16,7 @@
 		<ScrollViewer Grid.Row="1">
 			<ItemsControl ItemsSource="{Binding Queue}">
 				<ItemsControl.ItemTemplate>
-					<DataTemplate x:DataType="vm:Song">
+					<DataTemplate x:DataType="model:Song">
 						<Button Classes.current="{Binding IsCurrent}"
 								Background="Transparent"
 								BorderThickness="0"

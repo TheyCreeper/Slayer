@@ -8,6 +8,7 @@ using Avalonia.Media.Imaging;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using SlayerApp;
+using SlayerApp.Model;
 using SlayerApp.utils;
 
 namespace SlayerApp.ViewModel
@@ -41,6 +42,8 @@ namespace SlayerApp.ViewModel
 
         public int SongCount => Songs.Count;
         public string TotalDuration => FormatTotalDuration();
+
+        public Album GetAlbum() { return _album; }
 
         private void LoadSongs()
         {

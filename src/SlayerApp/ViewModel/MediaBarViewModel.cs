@@ -7,6 +7,7 @@ using System.Runtime.CompilerServices;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using LibVLCSharp.Shared;
+using SlayerApp.Model;
 using SlayerApp.utils;
 
 namespace SlayerApp.ViewModel;
