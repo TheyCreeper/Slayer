@@ -1,6 +1,7 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform.Storage;
+using Avalonia.Utilities;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using SlayerApp.Model;
@@ -31,13 +32,15 @@ namespace SlayerApp.ViewModel
             } 
         }
 
-        [ObservableProperty]
-        private bool _shuffle;
+
+
         public string TotalDuration => FormatTotalDuration();
 
         private Task<Bitmap?>? _cover;
         public Task<Bitmap?> Cover => _cover ??= LoadCoverAsync();
         public string Name => Playlist.Name;
+        public bool Shuffle { get => Playlist.Shuffle; set => Playlist.Shuffle = value; }
+        public bool IsPinned { get { return Playlist.IsPinned; } set { Playlist.IsPinned = value; } }
 
         public void RefreshCover()
         {
@@ -54,6 +57,7 @@ namespace SlayerApp.ViewModel
         {
             Playlist = playlist;
             Shuffle = playlist.Shuffle;
+            IsPinned = playlist.IsPinned;
         }
         private string FormatTotalDuration()
         {
@@ -134,6 +138,14 @@ namespace SlayerApp.ViewModel
         public void ToggleShuffle()
         {
             Shuffle = !Shuffle;
+            App.Database.AddData(Playlist);
+        }
+
+        [RelayCommand]
+        public void TogglePinned()
+        {
+            IsPinned = !IsPinned;
+            App.Database.AddData(Playlist);
         }
 
         [RelayCommand]

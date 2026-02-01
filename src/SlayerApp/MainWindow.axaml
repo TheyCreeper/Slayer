@@ -1,31 +1,57 @@
 <Window
-    x:Class="SlayerApp.MainWindow"
-    xmlns="https://github.com/avaloniaui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:views="using:SlayerApp"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    Title="SlayerApp"
-    d:DesignHeight="450"
-    d:DesignWidth="800"
-    mc:Ignorable="d">
-    <Grid RowDefinitions="*,Auto">
-        <DockPanel Grid.Row="0">
-            <!-- navigation bar -->
-            <StackPanel DockPanel.Dock="Left" Width="200" Background="#1a0033">
-                <Button Padding="16" Width="200" Foreground="White" Name="Home" Click="NavigationButton_Click">Home</Button>
-                <Button Padding="16" Width="200" Foreground="White" Name="Library" Click="NavigationButton_Click">Library</Button>
-                <Button Padding="16" Width="200" Foreground="White" Name="Settings" Click="NavigationButton_Click">Settings</Button>
-            </StackPanel>
-            <views:QueueView DockPanel.Dock="Right" />
-            
-            <Panel>
-                <views:LibraryView IsVisible="True" Name="LibraryView"/>
-                <views:SettingsView IsVisible="False" Name="SettingsView"/>
-            </Panel>
-        </DockPanel>
-        
-        <!-- Media Bar at bottom -->
-        <views:MediaBar Grid.Row="1" Name="MediaBarControl"/>
-    </Grid>
+x:Class="SlayerApp.MainWindow"
+xmlns="https://github.com/avaloniaui"
+xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+xmlns:views="using:SlayerApp"
+xmlns:views1="using:SlayerApp.Views"
+xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+xmlns:model="using:SlayerApp.Model"
+xmlns:vm="using:SlayerApp.ViewModel"
+x:DataType="vm:MainWindowViewModel"
+Title="SlayerApp"
+d:DesignHeight="450"
+d:DesignWidth="800"
+mc:Ignorable="d">
+	<Grid RowDefinitions="*,Auto">
+		<DockPanel Grid.Row="0">
+			<!-- navigation bar -->
+			<StackPanel DockPanel.Dock="Left" Width="200" Background="#1a0033">
+				<Button Padding="16" Width="200" Foreground="White" Name="Home" Click="NavigationButton_Click">Home</Button>
+				<Button Padding="16" Width="200" Foreground="White" Name="Library" Click="NavigationButton_Click">Library</Button>
+				<Button Padding="16" Width="200" Foreground="White" Name="Settings" Click="NavigationButton_Click">Settings</Button>
+				<ItemsControl ItemsSource="{Binding NavBarItem}">
+					<ItemsControl.ItemsPanel>
+						<ItemsPanelTemplate>
+							<StackPanel />
+						</ItemsPanelTemplate>
+					</ItemsControl.ItemsPanel>
+					<ItemsControl.ItemTemplate>
+						<DataTemplate x:DataType="model:Playlist">
+							<Button Padding="16" Width="200" Foreground="White" Name="{Binding Name}" Click="NavigationButton_Click" Command="{Binding $parent[ItemsControl].((vm:MainWindowViewModel)DataContext).NavigateToPlaylist}" Content="{Binding Name}"/>
+						</DataTemplate>
+					</ItemsControl.ItemTemplate>
+				</ItemsControl>
+			</StackPanel>
+			<views:QueueView DockPanel.Dock="Right" />
+			<ContentControl IsVisible="{Binding IsPlaylistSelected}"
+							Content="{Binding CurrentPlaylist}">
+				<ContentControl.ContentTemplate>
+					<DataTemplate x:DataType="vm:PlaylistViewModel">
+						<views1:PlaylistView>
+							<views1:PlaylistView.ContextFlyout/>
+						</views1:PlaylistView>
+					</DataTemplate>
+				</ContentControl.ContentTemplate>
+			</ContentControl>
+			<Panel>
+				<views:LibraryView IsVisible="True" Name="LibraryView"/>
+				<views:SettingsView IsVisible="False" Name="SettingsView"/>
+			</Panel>
+		</DockPanel>
+
+		<!-- Media Bar at bottom -->
+		<views:MediaBar Grid.Row="1" Name="MediaBarControl"/>
+	</Grid>
 </Window>
+

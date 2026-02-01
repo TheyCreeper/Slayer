@@ -99,7 +99,8 @@
 													<PathIcon Data="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>
 												</MenuItem.Icon>
 											</MenuItem>
-											<MenuItem Header="Pin">
+											<MenuItem Header="Pin"
+													Command="{Binding TogglePinnedCommand}">
 												<MenuItem.Icon>
 													<PathIcon Data="M16 9V4h1c.55 0 1-.45 1-1s-.45-1-1-1H7c-.55 0-1 .45-1 1s.45 1 1 1h1v5c0 1.66-1.34 3-3 3v2h5.97v7l1 1 1-1v-7H19v-2c-1.66 0-3-1.34-3-3z"/>
 												</MenuItem.Icon>
@@ -116,7 +117,7 @@
 											<Setter Property="Opacity" Value="0.8"/>
 										</Style>
 									</Button.Styles>
-									<views:AlbumDisc />
+									<views:PlaylistDisc />
 								</Button>
 							</DataTemplate>
 						</ItemsControl.ItemTemplate>

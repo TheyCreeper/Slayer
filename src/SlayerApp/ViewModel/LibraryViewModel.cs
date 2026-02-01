@@ -107,13 +107,12 @@ public partial class LibraryViewModel : ObservableObject
             var newPlaylist = new PlaylistViewModel(NewPlaylistName.Trim());
             Playlists.Add(newPlaylist);
             App.Database.AddData(newPlaylist.Playlist);
+            App.Playlists.Add(newPlaylist.Playlist);
             OnPropertyChanged(nameof(HasPlaylists));
         }
         IsCreatePlaylistPromptVisible = false;
         NewPlaylistName = string.Empty;
     }
-
-
 
     [RelayCommand]
     private void SelectPlaylist(PlaylistViewModel playlist)

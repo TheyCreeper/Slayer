@@ -18,7 +18,7 @@ public partial class App : Application
     public static DBViewModel Database { get; set; }
     public static iTunesSearchManager s_SearchManager = new();
     public static MediaBarViewModel MediaBar { get; } = new();
-    public static ObservableCollection<Playlist> Playlists { get; private set; }
+    public static ObservableCollection<Playlist> Playlists { get; set; }
     public override void Initialize()
     {
         AvaloniaXamlLoader.Load(this);

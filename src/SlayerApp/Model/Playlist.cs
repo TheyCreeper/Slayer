@@ -16,6 +16,7 @@ namespace SlayerApp.Model
         public ImageDrawing playlistImage { get; set; }
         public string PlaylistImage { get; set; }
         public bool Shuffle { get; set; }
+        public bool IsPinned { get; set; }
         public Playlist() { }
 
         public Playlist(string name)
