@@ -20,6 +20,7 @@
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
     <PackageReference Include="iTunesSearch" Version="1.0.44" />
     <PackageReference Include="LibVLCSharp" Version="3.9.5" />
+    <PackageReference Include="LiteDB" Version="5.0.21" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.2" />
     <PackageReference Include="TagLibSharp" Version="2.3.0" />
     <PackageReference Include="VideoLAN.LibVLC.Windows" Version="3.0.23" />

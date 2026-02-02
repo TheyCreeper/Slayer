@@ -42,8 +42,8 @@ public partial class LibraryViewModel : ObservableObject
 
     public LibraryViewModel()
     {
-        Albums = new(App.Database.GetAlbums().Select(a => new AlbumViewModel(a)));
-        Playlists = new(App.Database.GetPlaylists().Select(p => new PlaylistViewModel(p)));
+        Albums = new(App.Database.album.GetAllAlbums().Select(a => new AlbumViewModel(a)));
+        Playlists = new(App.Database.playlist.GetAllPlaylists().Select(p => new PlaylistViewModel(p)));
     }
 
     #region album
@@ -106,8 +106,8 @@ public partial class LibraryViewModel : ObservableObject
         {
             var newPlaylist = new PlaylistViewModel(NewPlaylistName.Trim());
             Playlists.Add(newPlaylist);
-            App.Database.AddData(newPlaylist.Playlist);
-            App.Playlists.Add(newPlaylist.Playlist);
+            App.Database.playlist.AddPlaylist(newPlaylist.Playlist);
+            //App.Playlists.Add(newPlaylist.Playlist);
             OnPropertyChanged(nameof(HasPlaylists));
         }
         IsCreatePlaylistPromptVisible = false;

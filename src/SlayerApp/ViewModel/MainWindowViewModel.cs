@@ -1,11 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using SlayerApp.Model;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 using System.Windows.Input;
 
 namespace SlayerApp.ViewModel
@@ -23,16 +20,16 @@ namespace SlayerApp.ViewModel
 
         public MainWindowViewModel()
         {
-            foreach (Playlist playlist in App.Database.GetPlaylists().Where(x => x.IsPinned))
+            foreach (Playlist playlist in App.Database.playlist.GetAllPlaylists().Where(x => x.IsPinned))
             {
                 NavBarItem.Add(playlist);
             }
         }
 
-        [RelayCommand]
-        private void NavigateToPlaylist(Playlist playlist)
-        {
-            CurrentPlaylist = new PlaylistViewModel(playlist);
-        }
+        //[RelayCommand]
+        //private void NavigateToPlaylist(Playlist playlist)
+        //{
+        //    CurrentPlaylist = new PlaylistViewModel(playlist);
+        //}
     }
 }

@@ -19,7 +19,7 @@ namespace SlayerApp.ViewModel
         {
             if (!string.IsNullOrEmpty(PathToAdd))  // Changed from IsNullOrEmpty to !IsNullOrEmpty
             {
-                App.Database.AddLibraryPath(PathToAdd);
+                App.Database.files.AddLocation(PathToAdd);
             }
         }
     }

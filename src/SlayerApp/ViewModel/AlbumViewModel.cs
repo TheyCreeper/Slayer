@@ -47,7 +47,7 @@ namespace SlayerApp.ViewModel
 
         private void LoadSongs()
         {
-            var albumSongs = App.Database.GetSongs()
+            var albumSongs = App.Database.song.GetAllSongs()
                 .Where(s => s.Album.Equals(Name, StringComparison.OrdinalIgnoreCase))
                 .OrderBy(s => s.TrackNumber)
                 .Select(s => s);

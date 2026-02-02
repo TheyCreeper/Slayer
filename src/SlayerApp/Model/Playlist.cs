@@ -1,15 +1,14 @@
 using Avalonia.Media;
-using SlayerApp.Model;
-using SlayerApp.ViewModel;
+using LiteDB;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
-using System.Linq;
 
 namespace SlayerApp.Model
 {
     public class Playlist
     {
+        [BsonId]
+        public ObjectId Id { get; set; } = ObjectId.NewObjectId();
         public string Name { get; set; } = string.Empty;
         public int SongCount { get; set; }
         public ObservableCollection<Song> trackList { get; set; } = new ObservableCollection<Song>();
@@ -30,7 +29,7 @@ namespace SlayerApp.Model
             {
                 trackList.Add(song);
             }
-            App.Database.AddData(this);
+            App.Database.playlist.AddOrUpdatePlaylist(this);
         }
     }
 }

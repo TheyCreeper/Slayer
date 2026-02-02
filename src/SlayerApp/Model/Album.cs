@@ -1,4 +1,5 @@
 using iTunesSearch.Library;
+using LiteDB;
 using SlayerApp;
 using SlayerApp.ViewModel;
 using System;
@@ -7,16 +8,19 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 
+
 public class Album
 {
-    public string Name {get;set;} = string.Empty;
-    public string ReleaseDate {get;set;}
-    public string AlbumArt {get;set;}
+    [BsonId]
+    public ObjectId Id { get; set; } = ObjectId.NewObjectId();
+    public string Name { get; set; } = string.Empty;
+    public string ReleaseDate { get; set; }
+    public string AlbumArt { get; set; }
     public string Artist { get; set; }
 
     public Album() { }
 
-    public Album(string name,string artist, string songPath = "")
+    public Album(string name, string artist, string songPath = "")
     {
         Name = name;
         Artist = artist;
@@ -47,7 +51,8 @@ public class Album
             var query = await App.s_SearchManager.GetAlbumsAsync(Artist + "," + Name).ConfigureAwait(false);
             AlbumArt = query.Albums[0].ArtworkUrl100.Replace("100x100bb", "600x600bb");
             ReleaseDate = query.Albums[0].ReleaseDate;
-        } catch
+        }
+        catch
         {
             AlbumArt = null;
         }

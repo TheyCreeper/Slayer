@@ -1,6 +1,7 @@
 using Avalonia.Controls.Primitives;
 using Avalonia.Media.Imaging;
 using CommunityToolkit.Mvvm.Input;
+using LiteDB;
 using SlayerApp;
 using System;
 using System.ComponentModel;
@@ -13,6 +14,8 @@ namespace SlayerApp.Model
 {
     public class Song : INotifyPropertyChanged
     {
+        [BsonId]
+        public ObjectId Id { get; set; } = ObjectId.NewObjectId();
         public string Checksum { get; set; } = string.Empty;
         public string Path { get; set; } = string.Empty;
         public string Title { get; set; } = string.Empty;

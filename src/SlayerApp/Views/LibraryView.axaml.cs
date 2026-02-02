@@ -24,7 +24,8 @@ public partial class LibraryView : UserControl
             menuItem.DataContext is AlbumViewModel sourceAlbum)
         {
             targetPlaylist.AddTracks(App.Database
-                .GetSongs()
+                .song
+                .GetAllSongs()
                 .Where(x => x.Album == sourceAlbum.Name));
         }
     }

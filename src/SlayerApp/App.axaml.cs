@@ -4,6 +4,7 @@ using Avalonia.Markup.Xaml;
 using iTunesSearch.Library;
 using SlayerApp;
 using SlayerApp.Model;
+using SlayerApp.Store;
 using SlayerApp.ViewModel;
 using src.SlayerApp.ViewModel;
 using System.Collections.ObjectModel;
@@ -15,7 +16,7 @@ namespace SlayerApp;
 
 public partial class App : Application
 {
-    public static DBViewModel Database { get; set; }
+    public static Database Database { get; set; }
     public static iTunesSearchManager s_SearchManager = new();
     public static MediaBarViewModel MediaBar { get; } = new();
     public static ObservableCollection<Playlist> Playlists { get; set; }
@@ -23,8 +24,7 @@ public partial class App : Application
     {
         AvaloniaXamlLoader.Load(this);
         Database = new();
-
-        Playlists = new ObservableCollection<Playlist>(Database.GetPlaylists().ToList());
+        Playlists = new ObservableCollection<Playlist>(Database.playlist.GetAllPlaylists());
     }
 
     public override void OnFrameworkInitializationCompleted()

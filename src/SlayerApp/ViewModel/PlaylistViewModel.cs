@@ -138,14 +138,14 @@ namespace SlayerApp.ViewModel
         public void ToggleShuffle()
         {
             Shuffle = !Shuffle;
-            App.Database.AddData(Playlist);
+            App.Database.playlist.UpdatePlaylist(Playlist);
         }
 
         [RelayCommand]
         public void TogglePinned()
         {
             IsPinned = !IsPinned;
-            App.Database.AddData(Playlist);
+            App.Database.playlist.UpdatePlaylist(Playlist);
         }
 
         [RelayCommand]
