@@ -19,7 +19,7 @@ using System.Threading.Tasks;
 
 namespace SlayerApp.ViewModel
 {
-    public partial class PlaylistViewModel : ObservableObject, ISongCollection
+    public partial class PlaylistViewModel : ObservableObject
     {
         private static readonly HttpClient s_httpClient = new();
 

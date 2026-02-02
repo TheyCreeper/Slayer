@@ -10,7 +10,12 @@ namespace SlayerApp.Store.DataContext
     public class SongDC
     {
         private readonly LiteDatabase database;
-        public SongDC(LiteDatabase dataBase) { database = dataBase; }
+        public SongDC(LiteDatabase dataBase)
+        {
+            database = dataBase;
+            // Create index on Checksum for faster lookups during sync
+            GetSongLiteCollection().EnsureIndex(s => s.Checksum);
+        }
 
         /// <summary>
         /// Gets the ILiteCollection collection of songs. Simplifies stuff ig
@@ -18,11 +23,16 @@ namespace SlayerApp.Store.DataContext
         /// <returns></returns>
         private ILiteCollection<Song> GetSongLiteCollection() => database.GetCollection<Model.Song>("songs");
 
-
         public List<Song> GetAllSongs() => GetSongLiteCollection().FindAll().ToList();
         public void AddOrUpdateSong(Song song) => GetSongLiteCollection().Upsert(song);
         public void AddSong(Song song) => GetSongLiteCollection().Insert(song);
         public void RemoveSong(Song song) => GetSongLiteCollection().Delete(song.Id);
         public void UpdateSong(Song song) => GetSongLiteCollection().Update(song);
+
+        // Bulk operations for faster sync
+        public int AddSongs(IEnumerable<Song> songs) => GetSongLiteCollection().InsertBulk(songs);
+        public int UpdateSongs(IEnumerable<Song> songs) => GetSongLiteCollection().Update(songs);
+        public int RemoveSongs(IEnumerable<Song> songs) => 
+            GetSongLiteCollection().DeleteMany(s => songs.Select(x => x.Id).Contains(s.Id));
     }
 }

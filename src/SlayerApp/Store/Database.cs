@@ -13,6 +13,7 @@ namespace SlayerApp.Store
 {
     public class Database
     {
+        private DatabaseManager databaseManager = new();
         private static readonly string AppDataPath = Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
             "SlayerApp");
@@ -23,5 +24,8 @@ namespace SlayerApp.Store
         public PlaylistDC playlist = new(db);
         public SongDC song = new(db);
         public FileDC files = new(db);
+
+        public void SyncDB() => databaseManager.SyncLibrary();
+        public void AddLocation(string path) => databaseManager.AddLibraryPathAndSync(path);
     }
 }

@@ -10,16 +10,14 @@ namespace SlayerApp.ViewModel
     {
         [ObservableProperty]
         private string? _pathToAdd;
-
-
         public SettingsViewModel() { }
 
         [RelayCommand]
         private void AddToPathList()
         {
-            if (!string.IsNullOrEmpty(PathToAdd))  // Changed from IsNullOrEmpty to !IsNullOrEmpty
+            if (!string.IsNullOrEmpty(PathToAdd))
             {
-                App.Database.files.AddLocation(PathToAdd);
+                App.Database.AddLocation(PathToAdd);
             }
         }
     }

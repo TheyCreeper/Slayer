@@ -13,7 +13,7 @@ using SlayerApp.utils;
 
 namespace SlayerApp.ViewModel
 {
-    public partial class AlbumViewModel : ObservableObject, IEquatable<AlbumViewModel>, ISongCollection
+    public partial class AlbumViewModel : ObservableObject, IEquatable<AlbumViewModel>
     {
         private static readonly HttpClient s_httpClient = new();
         private readonly Album _album;
@@ -48,7 +48,7 @@ namespace SlayerApp.ViewModel
         private void LoadSongs()
         {
             var albumSongs = App.Database.song.GetAllSongs()
-                .Where(s => s.Album.Equals(Name, StringComparison.OrdinalIgnoreCase))
+                .Where(s => string.Equals(s.Album, Name, StringComparison.OrdinalIgnoreCase))
                 .OrderBy(s => s.TrackNumber)
                 .Select(s => s);
 
