@@ -116,9 +116,7 @@ namespace SlayerApp.ViewModel
             if (shuffle)
             {
                 App.MediaBar.IsShuffleEnabled = true;
-                var shuffledSongs = new ObservableCollection<Song>(Songs);
-                QueueListManager.Shuffle(ref shuffledSongs);
-                App.MediaBar.PlaySongs(shuffledSongs);
+                App.MediaBar.PlaySongs(Songs);
                 return;
             }
             App.MediaBar.PlaySongs(Songs);

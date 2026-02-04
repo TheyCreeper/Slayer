@@ -1,6 +1,7 @@
 <UserControl xmlns="https://github.com/avaloniaui"
 			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:generic="using:System.Collections.Generic"
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			 xmlns:vm="clr-namespace:SlayerApp.ViewModel"
 			 mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="80"
@@ -16,8 +17,8 @@
 		<ScrollViewer Grid.Row="1">
 			<ItemsControl ItemsSource="{Binding Queue}">
 				<ItemsControl.ItemTemplate>
-					<DataTemplate x:DataType="model:Song">
-						<Button Classes.current="{Binding IsCurrent}"
+					<DataTemplate x:DataType="model:QueueItem">
+					<Button Classes.current="{Binding IsCurrent}"
 								Background="Transparent"
 								BorderThickness="0"
 								Padding="0"
@@ -43,10 +44,10 @@
 											   HorizontalAlignment="Center" VerticalAlignment="Center"/>
 								</Border>
 								<StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2" Margin="12,0,0,0">
-									<TextBlock Text="{Binding Title, FallbackValue='Unknown Title'}"
+									<TextBlock Text="{Binding Song.Title, FallbackValue='Unknown Title'}"
 											   Foreground="White" FontSize="14" FontWeight="SemiBold"
 											   TextTrimming="CharacterEllipsis"/>
-									<TextBlock Text="{Binding Artists, FallbackValue='Unknown Artist'}"
+									<TextBlock Text="{Binding Song.Artists, FallbackValue='Unknown Artist'}"
 											   Foreground="#b3b3b3" FontSize="12"
 											   TextTrimming="CharacterEllipsis"/>
 								</StackPanel>

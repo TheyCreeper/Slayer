@@ -1,22 +1,15 @@
 using Avalonia.Controls;
-using SlayerApp.Model;
 using SlayerApp.ViewModel;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Linq;
-using System.Runtime.CompilerServices;
 
 namespace SlayerApp;
 
-public partial class MainWindow : Window, INotifyPropertyChanged
+public partial class MainWindow : Window
 {
     public MainWindow()
     {
         InitializeComponent();
-        DataContext = this;
+        DataContext = new MainWindowViewModel();
         MediaBarControl.DataContext = App.MediaBar;
-
-        
     }
 
     private void HideUserControls()
@@ -24,7 +17,6 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         LibraryView.IsVisible = false;
         SettingsView.IsVisible = false;
     }
-
     private void NavigationButton_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
     {
         Button button = (Button)sender;
@@ -41,9 +33,6 @@ public partial class MainWindow : Window, INotifyPropertyChanged
                 SettingsView.IsVisible = true;
                 break;
             default:
-                //CurrentPlaylist = new PlaylistViewModel(NavBarItem
-                //    .Where(x => x.Name == button.Name)
-                //    .First());
                 break;
         }
     }

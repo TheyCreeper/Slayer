@@ -1,7 +1,8 @@
-﻿using iTunesSearch.Library.Models;
+﻿using SlayerApp.Model;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Text;
 
 namespace SlayerApp.utils
@@ -33,6 +34,15 @@ namespace SlayerApp.utils
                 n--;
                 int k = rng.Next(n + 1);
                 (list[k], list[n]) = (list[n], list[k]);
+            }
+        }
+        public static void UnShuffle(ref ObservableCollection<QueueItem> list)
+        {
+            var sorted = list.OrderBy(x => x.Index).ToList();
+            list.Clear();
+            foreach (var item in sorted)
+            {
+                list.Add(item);
             }
         }
 

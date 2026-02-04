@@ -75,7 +75,7 @@ public partial class MediaBarViewModel : ObservableObject
         set { _totalTimeFormatted = value; OnPropertyChanged(); }
     }
     public bool IsPlaying => _mediaPlayer.IsPlaying;
-    public ObservableCollection<Song> Queue { get; } = [];
+    public ObservableCollection<QueueItem> Queue { get; } = [];
 
     private int _currentIndex;
 
@@ -106,15 +106,12 @@ public partial class MediaBarViewModel : ObservableObject
         Queue.Clear();
         var songList = songs.ToList();
 
-        if (IsShuffleEnabled)
-        {
-            QueueListManager.Shuffle(ref songList);
-        }
 
         foreach (var song in songList)
         {
-            Queue.Add(song);
+            Queue.Add(new QueueItem(Queue.Count + 1, song));
         }
+        if (IsShuffleEnabled) ToggleShuffle(false);
 
         if (Queue.Count > 0)
         {
@@ -127,14 +124,14 @@ public partial class MediaBarViewModel : ObservableObject
 
     public void AddSingleToQueue(Song song)
     {
-        Queue.Add(song);
+        Queue.Add(new QueueItem(Queue.Count + 1, song));
     }
 
     public void AddToQueue(IEnumerable<Song> songs)
     {
         foreach (var song in songs)
         {
-            Queue.Add(song);
+            Queue.Add(new QueueItem(Queue.Count + 1, song));
         }
 
         if (!IsPlaying && Queue.Count > 0 && CurrentSong == null)
@@ -160,7 +157,7 @@ public partial class MediaBarViewModel : ObservableObject
                 Queue[i].IsCurrent = i == _currentIndex;
             }
 
-            CurrentSong = Queue[_currentIndex];
+            CurrentSong = Queue[_currentIndex].Song;
             
             if (string.IsNullOrEmpty(CurrentSong.Path) || !System.IO.File.Exists(CurrentSong.Path))
                 return;
@@ -223,14 +220,20 @@ public partial class MediaBarViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void ToggleShuffle()
+    private void ToggleShuffle(bool switchShuffle = true)
     {
-        IsShuffleEnabled = !IsShuffleEnabled;
+        //if (switchShuffle) IsShuffleEnabled = !IsShuffleEnabled;
+        var tempQueue = new ObservableCollection<QueueItem>(Queue);
         if (IsShuffleEnabled)
         {
-            var tempQueue = new ObservableCollection<Song>(Queue);
-            QueueListManager.Shuffle<Song>(ref tempQueue);
+            QueueListManager.Shuffle<QueueItem>(ref tempQueue);
+            Queue.Clear();
+            foreach (var item in tempQueue) Queue.Add(item);
+            return;
         }
+        QueueListManager.UnShuffle(ref tempQueue);
+        Queue.Clear();
+        foreach (var item in tempQueue) Queue.Add(item);
     }
 
     [RelayCommand]
@@ -240,9 +243,9 @@ public partial class MediaBarViewModel : ObservableObject
     }
 
     [RelayCommand]
-    public void PlayFromQueue(Song song)
+    public void PlayFromQueue(QueueItem item)
     {
-        var index = Queue.IndexOf(song);
+        var index = Queue.IndexOf(item);
         if (index >= 0)
         {
             _currentIndex = index;
