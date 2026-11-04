@@ -4,20 +4,33 @@ use crate::models::artist::Artist;
 use crate::models::song::Song;
 use crate::models::playlist::Playlist;
 
+use serde::{Deserialize, Serialize};
+use crate::controllers::json_serializer::JsonSerializer;
 
-pub struct LibraryRepository {
-    pub artists: Vec<Artist>,
-    pub albums: Vec<Album>,
-    pub songs: Vec<Song>,
-    pub playlists: Vec<Playlist>,
+#[derive(Serialize, Deserialize)]
+pub struct LibraryController {
+    artists: Vec<Artist>,
+    albums: Vec<Album>,
+    songs: Vec<Song>,
+    playlists: Vec<Playlist>,
 }
 
-impl LibraryRepository {
+impl LibraryController {
+    pub fn save(&self) -> Result<(), Box<dyn std::error::Error>> {
+        JsonSerializer::save("library.json", self)
+    }
+
+    pub fn load() -> Result<Self, Box<dyn std::error::Error>> {
+        JsonSerializer::load("library.json")
+    }
     ///
     /// Artist methods
     ///
     // region artists methods
 
+    pub fn get_artists(&self) -> &Vec<Artist> {
+        &self.artists
+    }
     /// This saves the object
     pub fn set_artist(&mut self, new_artist: Artist) {
         if let Some(artist) = self.get_artist_id(new_artist.id) {
@@ -94,6 +107,10 @@ impl LibraryRepository {
     /// Album methods
     ///
     // region album methods
+    pub fn get_albums(&self) -> &Vec<Album> {
+        &self.albums
+    }
+    
     pub fn set_album(&mut self, new_album: Album) {
         if let Some(album) = self.get_album_id(new_album.id) {
             *album = new_album;
@@ -160,6 +177,9 @@ impl LibraryRepository {
     /// Song methods
     ///
     // region song methods
+    pub fn get_songs(&self) -> &Vec<Song> {
+        &self.songs
+    }
     pub fn set_song(&mut self, new_song: Song) {
         if let Some(song) = self.get_song_id(new_song.id) {
             *song = new_song;
@@ -211,6 +231,9 @@ impl LibraryRepository {
     /// Playlist methods
     ///
     // region playlist methods
+    pub fn get_playlists(&self) -> &Vec<Playlist> {
+        &self.playlists
+    }
     pub fn set_playlist(&mut self, new_playlist: Playlist) {
         if let Some(playlist) = self.get_playlist_id(new_playlist.id) {
             *playlist = new_playlist;
