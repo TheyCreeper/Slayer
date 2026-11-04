@@ -1,0 +1,46 @@
+import { Link } from "Link.slint";
+export component AlbumCard inherits Rectangle {
+    in property <string> album-name;
+    in property <image> album-image;
+    in property <string> description;
+    in property <int> artist-id;
+
+    width: 180px;
+    height: 240px;
+    background: #252525;
+    border-radius: 12px;
+
+    VerticalLayout {
+        spacing: 8px;
+        padding: 10px;
+
+        Rectangle {
+            width: 100%;
+            height: 150px;
+            border-radius: 10px;
+            clip: true;
+
+            Image {
+                source: root.album-image;
+                width: 100%;
+                height: 100%;
+                image-fit: cover;
+            }
+        }
+
+        Text {
+            text: root.album-name;
+            color: white;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        Text {
+            text: root.description;
+            color: #aaaaaa;
+            font-size: 12px;
+            wrap: word-wrap;
+            overflow: elide;
+        }
+    }
+}

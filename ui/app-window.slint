@@ -1,18 +1,32 @@
-import { Button, VerticalBox } from "std-widgets.slint";
+import { Button, VerticalBox, HorizontalBox } from "std-widgets.slint";
+import { ArtistCard } from "components/artist-card.slint";
+import { AlbumCard } from "components/album-card.slint";
+import { NavBar } from "components/WindowElements/nav-bar.slint";
+import { Frame } from "views/frame.slint";
 
 export component AppWindow inherits Window {
     in-out property <int> counter: 42;
     callback request-increase-value();
-    VerticalBox {
-        Text {
-            text: "Counter: \{root.counter}";
+    HorizontalBox {
+        NavBar {
+            width: 200px;
         }
 
-        Button {
-            text: "Increase value";
-            clicked => {
-                root.request-increase-value();
-            }
+        Frame {
+            
         }
     }
+
+    //    VerticalBox {
+//        ArtistCard {
+//            artist-name: "Daft Punk";
+//            artist-image: @image-url("./assets/images.jpg");
+//            description: "Electronic music · 4 albums";
+//        }
+//
+//        AlbumCard {
+//            album-name: "test";
+//            description: "test";
+//        }
+//    }
 }

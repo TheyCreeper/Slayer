@@ -1,0 +1,18 @@
+export component Link inherits Text {
+//    in property <string> text;
+//    in property <string> url;
+    callback clicked();
+
+    HorizontalLayout {
+        text_element := Text {
+            text: root.text;
+            color: touch.has-hover ? #0066cc : #00aaff;
+        }
+
+        touch := TouchArea {
+            clicked => {
+                root.clicked();
+            }
+        }
+    }
+}
